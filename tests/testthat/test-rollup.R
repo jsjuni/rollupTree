@@ -24,6 +24,19 @@ test_that("rollup works", {
   expect_equal(result, expected)
 })
 
+test_that("validate_ds() detects mismatched ids", {
+  bad_graph <- wbs_tree |> add.vertices(1, name = c("bad"))
+  expect_error(validate_ds(bad_graph, wbs_table, function(d) d$id, function(d, l) d[d$id == l, "work"]),
+               "mismatched ids")
+})
+
+test_that("validate_ds() detects invalid leaf property values", {
+  bad_table <- wbs_table
+  bad_table[bad_table$id == "3.2", "work"] <- "bad"
+  expect_error(validate_ds(wbs_tree, bad_table, function(d) d$id, function(d, l) d[d$id == l, "work"]),
+               "leaf with invalid value")
+})
+
 test_that("default_validate_tree() finds the root of a valid tree", {
   expect_equal(names(default_validate_tree(wbs_tree)), "top")
 })
@@ -46,4 +59,19 @@ test_that("default_validate_tree() rejects a graph with loops", {
 test_that("default_validate_tree() rejects a graph with multiple edges", {
   bad_graph <- wbs_tree |> add_edges(c("1", "top"))
   expect_error(default_validate_tree(bad_graph), "graph contains multiple edges")
+})
+
+test_that("default_validate_tree() rejects a disconnected graph", {
+  bad_graph <- wbs_tree |> delete_edges(c("1|top"))
+  expect_error(default_validate_tree(bad_graph), "graph is disconnected")
+})
+
+test_that("default_validate_tree() rejects an undirected graph", {
+  bad_graph <- as.undirected(wbs_tree)
+  expect_error(default_validate_tree(bad_graph), "graph is undirected")
+})
+
+test_that("default_validate_tree() rejects a graph with multiple roots", {
+  bad_graph <- wbs_tree |> add_vertices(1, name = ("bad")) |> add_edges(c("1", "bad"))
+  expect_error(default_validate_tree(bad_graph), "graph contains multiple roots")
 })

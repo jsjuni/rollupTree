@@ -64,7 +64,7 @@ rollup <- function(tree, ds, update, validate_ds, validate_tree = default_valida
 #' @examples
 #' validate_ds(wbs_tree, wbs_table, function(d) d$id, function(d, l) d[d$id == l, "work"])
 #'
-validate_ds <- function(tree, ds, get_keys, get_prop, op=function(x) is.numeric(x)) {
+validate_ds <- function(tree, ds, get_keys, get_prop, op=function(x) is.numeric(x) & !is.na(x)) {
   tree_ids <- names(igraph::V(tree))
   ds_ids <- get_keys(ds)
   if (!setequal(tree_ids, ds_ids)) stop("mismatched ids")
