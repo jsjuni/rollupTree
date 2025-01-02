@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_prop.R
 \name{update_prop}
 \alias{update_prop}
-\title{Update a Data Set With Recursively-Defined Properties}
+\title{Update a data set with recursively-defined properties}
 \usage{
 update_prop(
   ds,

@@ -1,4 +1,4 @@
-#' Update a Data Set With Recursively-Defined Properties
+#' Update a data set with recursively-defined properties
 #'
 #' @description
 #' `update_prop()` calls user-specified methods to get properties
@@ -73,7 +73,7 @@ df_set_by_id <- function(df, r, c, v) {
   df_set_by_key(df, "id", r, c, v)
 }
 
-#' Update a Property in a Dataframe
+#' Update a property in a dataframe
 #'
 #' `update_df_prop_by_key()` is a convenience wrapper around `update_prop()`
 #' for the common case in which the data set is a dataframe.
@@ -98,7 +98,7 @@ update_df_prop_by_key <- function(df, key, target, sources, prop, ...) {
   )
 }
 
-#' Update a Property in a Dataframe With Key "id"
+#' Update a property in a dataframe with key "id"
 #'
 #' `update_df_prop_by_id()` is a convenience wrapper around `update_prop()`
 #' for the common case in which the data set is a dataframe whose key column
@@ -123,7 +123,7 @@ update_df_prop_by_id <- function(df, target, sources, prop, ...) {
   )
 }
 
-#' Validate a Dataframe For Rollup
+#' Validate a dataframe For rollup
 #'
 #' @description
 #' `validate_df_by_key()` is a convenience wrapper for `validate_ds()` for the common case in which the
@@ -144,7 +144,7 @@ validate_df_by_key <- function(tree, df, key, prop, ...) {
   validate_ds(tree, df, function(d) df_get_keys(d, key), function(d, r) df_get_by_key(d, key, r, prop), ...)
 }
 
-#' Validate a Dataframe with Key "id" For Rollup
+#' Validate a dataframe with key "id" for rollup
 #'
 #' @description
 #' `validate_df_by_id()` is a convenience wrapper for `validate_ds()` for the common case in which the

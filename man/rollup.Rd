@@ -2,7 +2,7 @@
 % Please edit documentation in R/rollup.R
 \name{rollup}
 \alias{rollup}
-\title{Perform Recursive Analysis}
+\title{Perform recursive analysis}
 \usage{
 rollup(tree, ds, update, validate_ds, validate_tree = default_validate_tree)
 }

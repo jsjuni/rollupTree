@@ -4,7 +4,13 @@
 \alias{validate_ds}
 \title{Validates a data set for use with \code{rollup()}}
 \usage{
-validate_ds(tree, ds, get_keys, get_prop, op = function(x) is.numeric(x))
+validate_ds(
+  tree,
+  ds,
+  get_keys,
+  get_prop,
+  op = function(x) is.numeric(x) & !is.na(x)
+)
 }
 \arguments{
 \item{tree}{The tree to check against}

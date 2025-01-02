@@ -1,4 +1,4 @@
-#' Perform Recursive Analysis
+#' Perform recursive analysis
 #'
 #' @description `rollup()` traverses a tree in depth-first postorder and calls a
 #' user-specified update method on each vertex, passing it a data set, the id of

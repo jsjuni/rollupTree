@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_prop.R
 \name{update_df_prop_by_key}
 \alias{update_df_prop_by_key}
-\title{Update a Property in a Dataframe}
+\title{Update a property in a dataframe}
 \usage{
 update_df_prop_by_key(df, key, target, sources, prop, ...)
 }
