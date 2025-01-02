@@ -1,5 +1,6 @@
 #' Update a Data Set With Recursively-Defined Properties
 #'
+#' @description
 #' `update_prop()` calls user-specified methods to get properties
 #' of a source set of elements in a data set, combine those properties,
 #' and set the properties of a target element to the combined value.
@@ -40,3 +41,85 @@ update_prop <- function(ds, target, sources, set, get,
   } else
     ds
 }
+
+# helper methods for data frames
+
+# get keys from data frame
+
+df_get_keys <- function(df, key) df[, key]
+
+# get ids from data frame (key="id")
+
+df_get_ids <- function(df) df_get_keys(df, "id")
+
+# get property by key from data frame
+
+df_get_by_key <- function(df, key, r, c) df[df[, key] == r, c]
+
+# get property by key="id" from data frame
+
+df_get_by_id <- function(df, r, c) df_get_by_key(df, "id", r, c)
+
+# set property by key in data frame
+
+df_set_by_key <- function(df, key, r, c, v) {
+  df[df[, key] == r, c] <- v
+  df
+}
+
+# set property by key="id" in data frame
+
+df_set_by_id <- function(df, r, c, v) {
+  df_set_by_key(df, "id", r, c, v)
+}
+
+#' Update a Property in a Dataframe
+#'
+#' `update_df_prop_by_key()` is a convenience wrapper around `update_prop()`
+#' for the common case in which the data set is a dataframe.
+#'
+#' @param df A data frame
+#' @param key Name of the column serving as key
+#' @param target Key of data set element to be updated
+#' @param sources Keys of data set elements to be combined
+#' @param prop Column name of the property
+#' @param ... Other arguments passed to `update_prop()`
+#'
+#' @return The updated dataframe
+#' @export
+#'
+#' @examples
+#' update_df_prop_by_key(wbs_table, "id", "1", list("1.1", "1.2"), "work")
+update_df_prop_by_key <- function(df, key, target, sources, prop, ...) {
+  update_prop(df, target, sources,
+              function(df, id, v) df_set_by_key(df, key, id, prop, v),
+              function(df, id, v) df_get_by_key(df, key, id, prop),
+              ...
+  )
+}
+
+#' Update a Property in a Dataframe With Key "id"
+#'
+#' `update_df_prop_by_id()` is a convenience wrapper around `update_prop()`
+#' for the common case in which the data set is a dataframe whose key column
+#' is named "id"
+#'
+#' @param df A data frame
+#' @param target Key of data set element to be updated
+#' @param sources Keys of data set elements to be combined
+#' @param prop Column name of the property
+#' @param ... Other arguments passed to `update_prop()`
+#'
+#' @return The updated dataframe
+#' @export
+#'
+#' @examples
+#' update_df_prop_by_id(wbs_table, "1", list("1.1", "1.2"), "work")
+update_df_prop_by_id <- function(df, target, sources, prop, ...) {
+  update_prop(df, target, sources,
+              function(df, id, v) df_set_by_id(df, id, prop, v),
+              function(df, id, v) df_get_by_id(df, id, prop),
+              ...
+  )
+}
+

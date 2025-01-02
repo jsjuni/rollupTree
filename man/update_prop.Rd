@@ -38,8 +38,7 @@ of a source set of elements in a data set, combine those properties,
 and set the properties of a target element to the combined value.
 If the source set is empty, the data set is returned unmodified. The
 default combine operation is addition.
-}
-\details{
+
 The \code{override} argument can be used to selectively override the
 computed value based on the target element. By default, it simply
 returns the value computed by combine().
