@@ -26,7 +26,6 @@
 #' @export
 #'
 #' @examples
-#'
 #'  rollup(wbs_tree, wbs_table,
 #'   update = function(d, p, c) {
 #'     if (length(c) > 0)
@@ -90,9 +89,8 @@ validate_ds <- function(tree, ds, get_keys, get_prop, op=function(x) is.numeric(
 #' default_validate_tree(wbs_tree)
 #'
 default_validate_tree <- function(tree) {
-  if (igraph::girth(tree, circle = FALSE)$girth != Inf) stop("graph is cyclic")
-  if (any(igraph::which_loop(tree))) stop("graph contains loops")
   if (any(igraph::which_multiple(tree))) stop("graph contains multiple edges")
+  if (!igraph::is_forest(tree, mode = "all")) stop("graph is cyclic")
   if (!igraph::is_connected(tree)) stop("graph is disconnected")
   if (!igraph::is_directed(tree)) stop("graph is undirected")
   roots <- which(igraph::degree(tree, mode = "out") == 0)

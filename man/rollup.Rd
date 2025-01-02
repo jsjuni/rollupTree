@@ -38,7 +38,6 @@ elements corresponding to leaf vertices in the tree satisfy some
 user-specified predicate, e.g., \code{is.numeric()}.
 }
 \examples{
-
  rollup(wbs_tree, wbs_table,
   update = function(d, p, c) {
     if (length(c) > 0)
