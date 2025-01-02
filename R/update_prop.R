@@ -123,3 +123,44 @@ update_df_prop_by_id <- function(df, target, sources, prop, ...) {
   )
 }
 
+#' Validate a Dataframe For Rollup
+#'
+#' @description
+#' `validate_df_by_key()` is a convenience wrapper for `validate_ds()` for the common case in which the
+#' data set is a dataframe.
+#'
+#' @param tree The tree to validate against
+#' @param df A datafame
+#' @param key Name of the column serving as key
+#' @param prop Property whose value is checked (leaf elements only)
+#' @param ... Other parameters passed to validate_ds()
+#'
+#' @return TRUE if validation succeeds, halts otherwise
+#' @export
+#'
+#' @examples
+#' validate_df_by_key(wbs_tree, wbs_table, "id", "work")
+validate_df_by_key <- function(tree, df, key, prop, ...) {
+  validate_ds(tree, df, function(d) df_get_keys(d, key), function(d, r) df_get_by_key(d, key, r, prop), ...)
+}
+
+#' Validate a Dataframe with Key "id" For Rollup
+#'
+#' @description
+#' `validate_df_by_id()` is a convenience wrapper for `validate_ds()` for the common case in which the
+#' data set is a dataframe with key column named "id".
+
+#'
+#' @param tree The tree to validate against
+#' @param df A datafame
+#' @param prop Property whose value is checked (leaf elements only)
+#' @param ... Other parameters passed to validate_ds()
+#'
+#' @return TRUE if validation succeeds, halts otherwise
+#' @export
+#'
+#' @examples
+#' validate_df_by_id(wbs_tree, wbs_table, "work")
+validate_df_by_id <- function(tree, df, prop, ...) {
+  validate_ds(tree, df, function(d) df_get_ids(d), function(d, r) df_get_by_id(d, r, prop), ...)
+}

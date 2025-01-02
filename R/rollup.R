@@ -59,7 +59,7 @@ rollup <- function(tree, ds, update, validate_ds, validate_tree = default_valida
 #' @param get_prop Method to get the property to validate for leaf element with id l, called as get_prop(ds, l)
 #' @param op Logical method to test return value of get_prop() (default `is.numeric()`); returns TRUE if OK
 #'
-#' @return TRUE if validation succeeds, FALSE otherwise
+#' @return TRUE if validation succeeds, halts otherwise
 #' @export
 #'
 #' @examples

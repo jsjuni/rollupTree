@@ -18,7 +18,7 @@ validate_ds(tree, ds, get_keys, get_prop, op = function(x) is.numeric(x))
 \item{op}{Logical method to test return value of get_prop() (default \code{is.numeric()}); returns TRUE if OK}
 }
 \value{
-TRUE if validation succeeds, FALSE otherwise
+TRUE if validation succeeds, halts otherwise
 }
 \description{
 \code{validate_ds()} ensures that a data set contains the same identifiers as a specified tree and that
