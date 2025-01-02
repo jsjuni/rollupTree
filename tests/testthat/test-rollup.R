@@ -25,7 +25,7 @@ test_that("rollup works", {
 })
 
 test_that("validate_ds() detects mismatched ids", {
-  bad_graph <- wbs_tree |> add.vertices(1, name = c("bad"))
+  bad_graph <- wbs_tree |> igraph::add_vertices(1, name = c("bad"))
   expect_error(validate_ds(bad_graph, wbs_table, function(d) d$id, function(d, l) d[d$id == l, "work"]),
                "mismatched ids")
 })
@@ -42,36 +42,36 @@ test_that("default_validate_tree() finds the root of a valid tree", {
 })
 
 test_that("default_validate_tree() rejects a cyclic graph (1)", {
-  bad_graph <- wbs_tree |> add_edges(c("top", "1.2"))
+  bad_graph <- wbs_tree |> igraph::add_edges(c("top", "1.2"))
   expect_error(default_validate_tree(bad_graph), "graph is cyclic")
 })
 
 test_that("default_validate_tree() rejects a cyclic graph (2)", {
-  bad_graph <- wbs_tree |> add_edges(c("1", "1.2"))
+  bad_graph <- wbs_tree |> igraph::add_edges(c("1", "1.2"))
   expect_error(default_validate_tree(bad_graph), "graph is cyclic")
 })
 
 test_that("default_validate_tree() rejects a graph with loops", {
-  bad_graph <- wbs_tree |> add_edges(c("top", "top"))
-  expect_error(default_validate_tree(bad_graph), "graph is cycl")
+  bad_graph <- wbs_tree |> igraph::add_edges(c("top", "top"))
+  expect_error(default_validate_tree(bad_graph), "graph is cyclic")
 })
 
 test_that("default_validate_tree() rejects a graph with multiple edges", {
-  bad_graph <- wbs_tree |> add_edges(c("1", "top"))
+  bad_graph <- wbs_tree |> igraph::add_edges(c("1", "top"))
   expect_error(default_validate_tree(bad_graph), "graph contains multiple edges")
 })
 
 test_that("default_validate_tree() rejects a disconnected graph", {
-  bad_graph <- wbs_tree |> delete_edges(c("1|top"))
+  bad_graph <- wbs_tree |> igraph::delete_edges(c("1|top"))
   expect_error(default_validate_tree(bad_graph), "graph is disconnected")
 })
 
 test_that("default_validate_tree() rejects an undirected graph", {
-  bad_graph <- as.undirected(wbs_tree)
+  bad_graph <- igraph::as.undirected(wbs_tree)
   expect_error(default_validate_tree(bad_graph), "graph is undirected")
 })
 
 test_that("default_validate_tree() rejects a graph with multiple roots", {
-  bad_graph <- wbs_tree |> add_vertices(1, name = ("bad")) |> add_edges(c("1", "bad"))
+  bad_graph <- wbs_tree |> igraph::add_vertices(1, name = ("bad")) |> igraph::add_edges(c("1", "bad"))
   expect_error(default_validate_tree(bad_graph), "graph contains multiple roots")
 })

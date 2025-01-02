@@ -46,6 +46,41 @@ rollup <- function(tree, ds, update, validate_ds, validate_tree = default_valida
   )
 }
 
+#' Update a rollup from a single leaf vertex
+#'
+#' @description
+#' update_rollup() performs a minimal update of a data set assuming a single leaf element property
+#' has changed. It performs updates along the path from that vertex to the root. There should be no difference
+#' in the output from calling rollup() again. update_rollup() is perhaps more efficient and useful in an interactive context.
+#'
+#' @param tree An igraph directed graph that is a valid single-rooted in-tree
+#' @param ds A data set to be updated; can be any object
+#' @param vertex The start vertex
+#' @param update The update method called at each vertex as update(ds, parent_key, child_keys)
+#'
+#' @return The updated data set.
+#' @export
+#'
+#' @examples
+#' update_rollup(wbs_tree, wbs_table, igraph::V(wbs_tree)["3.2"],
+#'   update = function(d, p, c) {
+#'     if (length(c) > 0)
+#'       d[d$id == p, c("work", "budget")] <-
+#'         apply(d[is.element(d$id, c), c("work", "budget")], 2, sum)
+#'       d
+#'   }
+#' )
+#' @importFrom stats na.omit
+#'
+update_rollup <- function(tree, ds, vertex, update) {
+  if (igraph::degree(tree, vertex, mode="in") > 0) stop("update_rollup() on non-leaf")
+  Reduce(
+    f = function(s, v) update(s, names(igraph::V(tree))[v], names(igraph::neighbors(tree, v, "in"))),
+    x = na.omit(as.vector(igraph::dfs(tree, vertex, mode="in", unreachable=FALSE, order=TRUE)$order))[-1],
+    init = ds
+  )
+}
+
 #' Validates a data set for use with `rollup()`
 #'
 #' @description

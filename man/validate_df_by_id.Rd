@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_prop.R
 \name{validate_df_by_id}
 \alias{validate_df_by_id}
-\title{Validate a dataframe with key "id" for rollup()}
+\title{Validate a dataframe with key "id" for rollup}
 \usage{
 validate_df_by_id(tree, df, prop, ...)
 }
