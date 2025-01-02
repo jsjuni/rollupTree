@@ -39,12 +39,11 @@ user-specified predicate, e.g., \code{is.numeric()}.
 }
 \examples{
 
-ds <- data.frame(id=c("a", "b", "c", "d", "e"), mass=c(NA,18.2,NA,5.2,9.9))
-tree <- igraph::graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
-rollup(tree, ds,
+ rollup(wbs_tree, wbs_table,
   update = function(d, p, c) {
     if (length(c) > 0)
-      d[d$id == p, "mass"] <- sum(d[is.element(d$id, c), "mass"])
+      d[d$id == p, c("work", "budget")] <-
+        apply(d[is.element(d$id, c), c("work", "budget")], 2, sum)
       d
   },
   validate_ds = function(tree, ds) TRUE

@@ -27,12 +27,11 @@
 #'
 #' @examples
 #'
-#' ds <- data.frame(id=c("a", "b", "c", "d", "e"), mass=c(NA,18.2,NA,5.2,9.9))
-#' tree <- igraph::graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
-#' rollup(tree, ds,
+#'  rollup(wbs_tree, wbs_table,
 #'   update = function(d, p, c) {
 #'     if (length(c) > 0)
-#'       d[d$id == p, "mass"] <- sum(d[is.element(d$id, c), "mass"])
+#'       d[d$id == p, c("work", "budget")] <-
+#'         apply(d[is.element(d$id, c), c("work", "budget")], 2, sum)
 #'       d
 #'   },
 #'   validate_ds = function(tree, ds) TRUE
@@ -64,9 +63,7 @@ rollup <- function(tree, ds, update, validate_ds, validate_tree = default_valida
 #' @export
 #'
 #' @examples
-#' ds <- data.frame(id=c("a", "b", "c", "d", "e"), mass=c(NA,18.2,NA,5.2,9.9))
-#' tree <- igraph::graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
-#' validate_ds(tree, ds, function(d) d$id, function(d, l) d[d$id == l, "mass"])
+#' validate_ds(wbs_tree, wbs_table, function(d) d$id, function(d, l) d[d$id == l, "work"])
 #'
 validate_ds <- function(tree, ds, get_keys, get_prop, op=function(x) is.numeric(x)) {
   tree_ids <- names(igraph::V(tree))
@@ -90,8 +87,7 @@ validate_ds <- function(tree, ds, get_keys, get_prop, op=function(x) is.numeric(
 #' @export
 #'
 #' @examples
-#' tree <- igraph::graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
-#' default_validate_tree(tree)
+#' default_validate_tree(wbs_tree)
 #'
 default_validate_tree <- function(tree) {
   if (igraph::girth(tree, circle = FALSE)$girth != Inf) stop("graph is cyclic")

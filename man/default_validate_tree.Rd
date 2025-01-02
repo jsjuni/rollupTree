@@ -18,7 +18,6 @@ loop-free, single-edged, connected, directed, and single-rooted with edge
 direction from child to parent.
 }
 \examples{
-tree <- igraph::graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
-default_validate_tree(tree)
+default_validate_tree(wbs_tree)
 
 }

@@ -20,3 +20,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
     igraph (>= 1.6.0)
+Depends: 
+    R (>= 3.5)
+LazyData: true

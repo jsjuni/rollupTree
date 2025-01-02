@@ -25,8 +25,6 @@ TRUE if validation succeeds, FALSE otherwise
 elements of the data set corresponding to leaf verticies in the tree satisfy a user-specified predicate.
 }
 \examples{
-ds <- data.frame(id=c("a", "b", "c", "d", "e"), mass=c(NA,18.2,NA,5.2,9.9))
-tree <- igraph::graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
-validate_ds(tree, ds, function(d) d$id, function(d, l) d[d$id == l, "mass"])
+validate_ds(wbs_tree, wbs_table, function(d) d$id, function(d, l) d[d$id == l, "work"])
 
 }
