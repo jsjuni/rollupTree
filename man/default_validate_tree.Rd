@@ -2,7 +2,7 @@
 % Please edit documentation in R/rollup.R
 \name{default_validate_tree}
 \alias{default_validate_tree}
-\title{Validate a tree for use with rollup()}
+\title{Validate a tree for use with \code{rollup()}}
 \usage{
 default_validate_tree(tree)
 }
@@ -13,7 +13,12 @@ default_validate_tree(tree)
 single root element if tree is valid; stops otherwise
 }
 \description{
-default_validate_tree() ensures that a tree is acyclic,
+\code{default_validate_tree()} ensures that a tree is acyclic,
 loop-free, single-edged, connected, directed, and single-rooted with edge
 direction from child to parent.
+}
+\examples{
+tree <- igraph::graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
+default_validate_tree(tree)
+
 }

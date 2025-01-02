@@ -2,3 +2,4 @@
 
 export(default_validate_tree)
 export(rollup)
+export(validate_ds)

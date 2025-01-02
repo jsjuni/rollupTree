@@ -28,9 +28,13 @@
 #' @examples
 #'
 #' ds <- data.frame(id=c("a", "b", "c", "d", "e"), mass=c(NA,18.2,NA,5.2,9.9))
-#' tree <- graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
+#' tree <- igraph::graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
 #' rollup(tree, ds,
-#'   update = function(d, p, c) { if (length(c) > 0) d[d$id == p, "mass"] <- sum(d[is.element(d$id, c), "mass"]); d },
+#'   update = function(d, p, c) {
+#'     if (length(c) > 0)
+#'       d[d$id == p, "mass"] <- sum(d[is.element(d$id, c), "mass"])
+#'       d
+#'   },
 #'   validate_ds = function(tree, ds) TRUE
 #' )
 #'
@@ -44,9 +48,39 @@ rollup <- function(tree, ds, update, validate_ds, validate_tree = default_valida
   )
 }
 
-#' Validate a tree for use with rollup()
+#' Validates a data set for use with `rollup()`
 #'
-#' @description default_validate_tree() ensures that a tree is acyclic,
+#' @description
+#' `validate_ds()` ensures that a data set contains the same identifiers as a specified tree and that
+#' elements of the data set corresponding to leaf verticies in the tree satisfy a user-specified predicate.
+#'
+#' @param tree The tree to check against
+#' @param ds The data set to validate
+#' @param get_keys Method get keys of the data set called as get_keys(ds)
+#' @param get_prop Method to get the property to validate for leaf element with id l, called as get_prop(ds, l)
+#' @param op Logical method to test return value of get_prop() (default `is.numeric()`); returns TRUE if OK
+#'
+#' @return TRUE if validation succeeds, FALSE otherwise
+#' @export
+#'
+#' @examples
+#' ds <- data.frame(id=c("a", "b", "c", "d", "e"), mass=c(NA,18.2,NA,5.2,9.9))
+#' tree <- igraph::graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
+#' validate_ds(tree, ds, function(d) d$id, function(d, l) d[d$id == l, "mass"])
+#'
+validate_ds <- function(tree, ds, get_keys, get_prop, op=function(x) is.numeric(x)) {
+  tree_ids <- names(igraph::V(tree))
+  ds_ids <- get_keys(ds)
+  if (!setequal(tree_ids, ds_ids)) stop("mismatched ids")
+  leaves <- names(which(igraph::degree(tree, mode = "in") == 0))
+  if (any(sapply(leaves, FUN=function(l) !op(get_prop(ds, l)))))
+    stop (paste("leaf with invalid value"))
+  TRUE
+}
+
+#' Validate a tree for use with `rollup()`
+#'
+#' @description `default_validate_tree()` ensures that a tree is acyclic,
 #' loop-free, single-edged, connected, directed, and single-rooted with edge
 #' direction from child to parent.
 #'
@@ -56,6 +90,9 @@ rollup <- function(tree, ds, update, validate_ds, validate_tree = default_valida
 #' @export
 #'
 #' @examples
+#' tree <- igraph::graph(c("b", "a", "c", "a", "d", "c", "e", "c"), directed = TRUE)
+#' default_validate_tree(tree)
+#'
 default_validate_tree <- function(tree) {
   if (igraph::girth(tree, circle = FALSE)$girth != Inf) stop("graph is cyclic")
   if (any(igraph::which_loop(tree))) stop("graph contains loops")
