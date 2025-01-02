@@ -2,4 +2,5 @@
 
 export(default_validate_tree)
 export(rollup)
+export(update_prop)
 export(validate_ds)
