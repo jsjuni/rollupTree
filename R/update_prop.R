@@ -58,8 +58,7 @@ df_get_by_key <- function(df, key, r, c) df[df[, key] == r, c]
 
 # get property by key="id" from data frame
 
-df_get_by_id <- function(df, r, c) df_get_by_key(df, "id", r, c)
-
+df_get_by_id <- function(df, r, c) df[df[, "id"] == r, c]
 # set property by key in data frame
 
 df_set_by_key <- function(df, key, r, c, v) {
@@ -70,7 +69,8 @@ df_set_by_key <- function(df, key, r, c, v) {
 # set property by key="id" in data frame
 
 df_set_by_id <- function(df, r, c, v) {
-  df_set_by_key(df, "id", r, c, v)
+  df[df[, "id"] == r, c] <- v
+  df
 }
 
 #' Update a property in a dataframe
