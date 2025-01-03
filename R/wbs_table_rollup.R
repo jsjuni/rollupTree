@@ -1,4 +1,4 @@
-#' Example Work Breakdown Structure Data (Leaf Elements Only)
+#' Example Work Breakdown Structure Data After Rollup
 #' @source <https://www.workbreakdownstructure.com>
 #' @format A data frame with columns:
 #' \describe{
@@ -7,4 +7,4 @@
 #' \item{work}{percent of total work for this element}
 #' \item{budget}{budget for this element}
 #' }
-"wbs_table"
+"wbs_table_rollup"

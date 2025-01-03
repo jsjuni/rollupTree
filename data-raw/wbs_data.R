@@ -10,6 +10,16 @@ wbs_table <- data.frame(
   budget = c(NA, NA, NA, NA, 25000, 61000, 37000, 9000, 62000, 21500)
 )
 
+wbs_table_rollup <- wbs_table
+wbs_table_rollup[wbs_table_rollup$id == "1", "work"] <- 45.6
+wbs_table_rollup[wbs_table_rollup$id == "2", "work"] <- 24.0
+wbs_table_rollup[wbs_table_rollup$id == "3", "work"] <- 30.4
+wbs_table_rollup[wbs_table_rollup$id == "top", "work"] <- 100
+wbs_table_rollup[wbs_table_rollup$id == "1", "budget"] <- 86000
+wbs_table_rollup[wbs_table_rollup$id == "2", "budget"] <- 46000
+wbs_table_rollup[wbs_table_rollup$id == "3", "budget"] <- 83500
+wbs_table_rollup[wbs_table_rollup$id == "top", "budget"] <- 215500
+
 wbs_tree <- igraph::graph(
   c(
     "1", "top", "2", "top", "3", "top",
@@ -18,4 +28,5 @@ wbs_tree <- igraph::graph(
 )
 
 usethis::use_data(wbs_table, overwrite = TRUE)
+usethis::use_data(wbs_table_rollup, overwrite = TRUE)
 usethis::use_data(wbs_tree, overwrite = TRUE)

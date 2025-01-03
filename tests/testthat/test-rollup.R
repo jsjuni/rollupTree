@@ -1,13 +1,4 @@
 test_that("rollup works", {
-  expected <- wbs_table |>
-    df_set_by_id("top", "work", 100.0) |>
-    df_set_by_id("1", "work", 45.6) |>
-    df_set_by_id("2", "work", 24.0) |>
-    df_set_by_id("3", "work", 30.4) |>
-    df_set_by_id("top", "budget", 215500) |>
-    df_set_by_id("1", "budget", 86000) |>
-    df_set_by_id("2", "budget", 46000) |>
-    df_set_by_id("3", "budget", 83500)
   result <- rollup(
     wbs_tree,
     wbs_table,
@@ -21,7 +12,26 @@ test_that("rollup works", {
       TRUE
   )
 
-  expect_equal(result, expected)
+  expect_equal(result, wbs_table_rollup)
+})
+
+test_that("update_rollup() works", {
+  input <- wbs_table_rollup
+  input[input$id == "3.2", "budget"] <- 22000
+  input[input$id == "2.2", "work"] <- NA
+  result <- update_rollup(
+    wbs_tree,
+    input,
+    igraph::V(wbs_tree)["3.2"],
+    update = function(d, p, c) {
+      if (length(c) > 0)
+        d[d$id == p, c("work", "budget")] <-
+          apply(d[is.element(d$id, c), c("work", "budget")], 2, sum)
+      d
+    }
+  )
+  expect_equal(result[result$id == "top", "budget"], 216000)
+  expect_equal(result[result$id == "top", "work"], 100)
 })
 
 test_that("validate_ds() detects mismatched ids", {
