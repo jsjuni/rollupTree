@@ -32,4 +32,5 @@ update_rollup(wbs_tree, wbs_table, igraph::V(wbs_tree)["3.2"],
       d
   }
 )
+
 }

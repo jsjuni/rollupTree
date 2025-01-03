@@ -70,13 +70,12 @@ rollup <- function(tree, ds, update, validate_ds, validate_tree = default_valida
 #'       d
 #'   }
 #' )
-#' @importFrom stats na.omit
 #'
 update_rollup <- function(tree, ds, vertex, update) {
   if (igraph::degree(tree, vertex, mode="in") > 0) stop("update_rollup() on non-leaf")
   Reduce(
     f = function(s, v) update(s, names(igraph::V(tree))[v], names(igraph::neighbors(tree, v, "in"))),
-    x = na.omit(as.vector(igraph::dfs(tree, vertex, mode="out", unreachable=FALSE, order=TRUE)$order))[-1],
+    x = igraph::dfs(tree, vertex, mode="out", unreachable=FALSE, order=TRUE)$order,
     init = ds
   )
 }
