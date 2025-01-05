@@ -102,7 +102,7 @@ wbs_tree <- igraph::graph_from_edgelist(
   directed = TRUE
 )
 E(wbs_tree)
-#> + 9/9 edges from ad6d430 (vertex names):
+#> + 9/9 edges from 75e79b8 (vertex names):
 #> [1] 1  ->top 2  ->top 3  ->top 1.1->1   1.2->1   2.1->2   2.2->2   3.1->3  
 #> [9] 3.2->3
 ```
@@ -196,19 +196,24 @@ my_set <- function(d, i, v) {
   df_set_by_id(df=d, id=i, prop="work", value=v["w"]) |>
     df_set_by_id(id=i, prop="budget", value=v["b"])
 }
-my_check <- function(v) is.numeric(v) && !is.na(v)
-knitr::kable(rollup(
-  tree=wbs_tree,
-  ds=wbs_table,
-  update=function(d, t, s) {
+my_update <- function(d, t, s) {
     update_prop(ds=d, target=t, sources=s, set=my_set, get=my_get)
-  },
-  validate_ds=function(t, d) {
-   validate_ds(tree=t, ds=d,
+}
+my_validate <- function(t, d) {
+  validate_ds(tree=t, ds=d,
                get_keys=function(d) df_get_ids(df=d),
                get_prop=my_get,
-               op=function(v) my_check(v["w"]) && my_check(v["b"]))
-  }
+               op=function(v) my_check(v["w"]) && my_check(v["b"])
+  )
+}
+my_check <- function(v)
+  is.numeric(v) && !is.na(v)
+
+knitr::kable(rollup(
+  tree = wbs_tree,
+  ds = wbs_table,
+  update = my_update,
+  validate_ds = my_validate
 ))
 ```
 
@@ -227,5 +232,3 @@ knitr::kable(rollup(
 
 [^1]: `id` is the default but any valid column name can be used. Values
     should be character data.
-=======
-Mass rollup for a Bill of Materials is an example of a class of computations in which elements are arranged in a tree structure and some property of each element is a computed function of the corresponding values of its child elements. Leaf elements, i.e., those with no children, have values assigned. In many cases, the combining function is simply the arithmetic sum; in other cases (e.g., higher-order mass properties), the combiner may involve other information such as the geometric relationship between parent and child, or statistical relations such as root-sum-of-squares (RSS). This R package implements a general framework for such problems. It is adapted to specific recursive analyses by functional programming techniques; the caller passes _get()_, _set()_, _combine()_, and (optional) _override()_ methods at runtime to specify the desired operations.

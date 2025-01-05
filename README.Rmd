@@ -115,18 +115,23 @@ my_set <- function(d, i, v) {
   df_set_by_id(df=d, id=i, prop="work", value=v["w"]) |>
     df_set_by_id(id=i, prop="budget", value=v["b"])
 }
-my_check <- function(v) is.numeric(v) && !is.na(v)
-knitr::kable(rollup(
-  tree=wbs_tree,
-  ds=wbs_table,
-  update=function(d, t, s) {
+my_update <- function(d, t, s) {
     update_prop(ds=d, target=t, sources=s, set=my_set, get=my_get)
-  },
-  validate_ds=function(t, d) {
-   validate_ds(tree=t, ds=d,
+}
+my_validate <- function(t, d) {
+  validate_ds(tree=t, ds=d,
                get_keys=function(d) df_get_ids(df=d),
                get_prop=my_get,
-               op=function(v) my_check(v["w"]) && my_check(v["b"]))
-  }
+               op=function(v) my_check(v["w"]) && my_check(v["b"])
+  )
+}
+my_check <- function(v)
+  is.numeric(v) && !is.na(v)
+
+knitr::kable(rollup(
+  tree = wbs_tree,
+  ds = wbs_table,
+  update = my_update,
+  validate_ds = my_validate
 ))
 ```
