@@ -50,6 +50,14 @@ df_get_keys <- function(df, key) df[, key]
 
 # get ids from data frame (key="id")
 
+#' Title
+#'
+#' @param df A data frame
+#'
+#' @return All of the "id" column
+#' @export
+#'
+#' @examples
 df_get_ids <- function(df) df_get_keys(df, "id")
 
 # get property by key from data frame
@@ -58,7 +66,18 @@ df_get_by_key <- function(df, key, r, c) df[df[, key] == r, c]
 
 # get property by key="id" from data frame
 
-df_get_by_id <- function(df, r, c) df[df[, "id"] == r, c]
+#' Title
+#'
+#' @param df A data frame
+#' @param id ID of the row to get
+#' @param prop Name of the column to get
+#'
+#' @return The desired value
+#' @export
+#'
+#' @examples
+df_get_by_id <- function(df, id, prop) df[df[, "id"] == id, prop]
+
 # set property by key in data frame
 
 df_set_by_key <- function(df, key, r, c, v) {
@@ -68,8 +87,19 @@ df_set_by_key <- function(df, key, r, c, v) {
 
 # set property by key="id" in data frame
 
-df_set_by_id <- function(df, r, c, v) {
-  df[df[, "id"] == r, c] <- v
+#' Title
+#'
+#' @param df A data frame
+#' @param id ID of the row to set
+#' @param prop Name of the column to set
+#' @param value Value to set
+#'
+#' @return The updated dataframe
+#' @export
+#'
+#' @examples
+df_set_by_id <- function(df, id, prop, value) {
+  df[df[, "id"] == id, prop] <- value
   df
 }
 

@@ -77,7 +77,7 @@ test_that("default_validate_tree() rejects a disconnected graph", {
 })
 
 test_that("default_validate_tree() rejects an undirected graph", {
-  bad_graph <- igraph::as.undirected(wbs_tree)
+  bad_graph <- igraph::as_undirected(wbs_tree)
   expect_error(default_validate_tree(bad_graph), "graph is undirected")
 })
 
