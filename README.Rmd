@@ -144,7 +144,7 @@ my_validate <- function(t, d) {
   )
 }
 my_check <- function(v)
-  is.numeric(v) && !is.na(v)
+  is.numeric(v) && !is.na(v) && (v > 0.0)
 
 result4 <- rollup(
   tree = wbs_tree,
@@ -160,7 +160,7 @@ Finally, we illustrate the use of a custom combiner. Suppose we have 5% uncertai
 ```{r}
 new_wbs_table <- result2
 new_wbs_table$budget_unc <- ifelse(is.na(wbs_table$budget), NA, wbs_table$budget * 0.05)
-new_wbs_table
+knitr::kable(new_wbs_table)
 ```
 
 The standard technique for accumulating uncertainties is to combine using root-sum-square (RSS).
@@ -186,5 +186,6 @@ result5 <- rollup(
   validate_ds = function(t, d)
     validate_df_by_id(tree = t, df = d, prop = "budget_unc"),
 )
-knitr::kable(result5)
+result5$budget_unc_pct <- result5$budget_unc / result5$budget * 100.
+knitr::kable(result5, digits = 1)
 ```

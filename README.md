@@ -102,9 +102,9 @@ wbs_tree <- igraph::graph_from_edgelist(
   directed = TRUE
 )
 wbs_tree
-#> IGRAPH 6589096 DN-- 10 9 -- 
+#> IGRAPH e35e343 DN-- 10 9 -- 
 #> + attr: name (v/c)
-#> + edges from 6589096 (vertex names):
+#> + edges from e35e343 (vertex names):
 #> [1] 1  ->top 2  ->top 3  ->top 1.1->1   1.2->1   2.1->2   2.2->2   3.1->3  
 #> [9] 3.2->3
 ```
@@ -251,7 +251,7 @@ my_validate <- function(t, d) {
   )
 }
 my_check <- function(v)
-  is.numeric(v) && !is.na(v)
+  is.numeric(v) && !is.na(v) && (v > 0.0)
 
 result4 <- rollup(
   tree = wbs_tree,
@@ -282,19 +282,21 @@ our data frame:
 ``` r
 new_wbs_table <- result2
 new_wbs_table$budget_unc <- ifelse(is.na(wbs_table$budget), NA, wbs_table$budget * 0.05)
-new_wbs_table
-#>     id  pid                    name  work budget budget_unc
-#> 1  top <NA> Construction of a House 100.0 215500         NA
-#> 2    1  top                Internal  45.6  86000         NA
-#> 3    2  top              Foundation  24.0  46000         NA
-#> 4    3  top                External  30.4  83500         NA
-#> 5  1.1    1              Electrical  11.8  25000       1250
-#> 6  1.2    1                Plumbing  33.8  61000       3050
-#> 7  2.1    2                Excavate  18.2  37000       1850
-#> 8  2.2    2          Steel Erection   5.8   9000        450
-#> 9  3.1    3            Masonry Work  16.2  62000       3100
-#> 10 3.2    3       Building Finishes  14.2  21500       1075
+knitr::kable(new_wbs_table)
 ```
+
+| id  | pid | name                    |  work | budget | budget_unc |
+|:----|:----|:------------------------|------:|-------:|-----------:|
+| top | NA  | Construction of a House | 100.0 | 215500 |         NA |
+| 1   | top | Internal                |  45.6 |  86000 |         NA |
+| 2   | top | Foundation              |  24.0 |  46000 |         NA |
+| 3   | top | External                |  30.4 |  83500 |         NA |
+| 1.1 | 1   | Electrical              |  11.8 |  25000 |       1250 |
+| 1.2 | 1   | Plumbing                |  33.8 |  61000 |       3050 |
+| 2.1 | 2   | Excavate                |  18.2 |  37000 |       1850 |
+| 2.2 | 2   | Steel Erection          |   5.8 |   9000 |        450 |
+| 3.1 | 3   | Masonry Work            |  16.2 |  62000 |       3100 |
+| 3.2 | 3   | Building Finishes       |  14.2 |  21500 |       1075 |
 
 The standard technique for accumulating uncertainties is to combine
 using root-sum-square (RSS).
@@ -320,21 +322,22 @@ result5 <- rollup(
   validate_ds = function(t, d)
     validate_df_by_id(tree = t, df = d, prop = "budget_unc"),
 )
-knitr::kable(result5)
+result5$budget_unc_pct <- result5$budget_unc / result5$budget * 100.
+knitr::kable(result5, digits = 1)
 ```
 
-| id  | pid | name                    |  work | budget | budget_unc |
-|:----|:----|:------------------------|------:|-------:|-----------:|
-| top | NA  | Construction of a House | 100.0 | 215500 |   5025.497 |
-| 1   | top | Internal                |  45.6 |  86000 |   3296.210 |
-| 2   | top | Foundation              |  24.0 |  46000 |   1903.943 |
-| 3   | top | External                |  30.4 |  83500 |   3281.101 |
-| 1.1 | 1   | Electrical              |  11.8 |  25000 |   1250.000 |
-| 1.2 | 1   | Plumbing                |  33.8 |  61000 |   3050.000 |
-| 2.1 | 2   | Excavate                |  18.2 |  37000 |   1850.000 |
-| 2.2 | 2   | Steel Erection          |   5.8 |   9000 |    450.000 |
-| 3.1 | 3   | Masonry Work            |  16.2 |  62000 |   3100.000 |
-| 3.2 | 3   | Building Finishes       |  14.2 |  21500 |   1075.000 |
+| id  | pid | name                    |  work | budget | budget_unc | budget_unc_pct |
+|:----|:----|:------------------------|------:|-------:|-----------:|---------------:|
+| top | NA  | Construction of a House | 100.0 | 215500 |     5025.5 |            2.3 |
+| 1   | top | Internal                |  45.6 |  86000 |     3296.2 |            3.8 |
+| 2   | top | Foundation              |  24.0 |  46000 |     1903.9 |            4.1 |
+| 3   | top | External                |  30.4 |  83500 |     3281.1 |            3.9 |
+| 1.1 | 1   | Electrical              |  11.8 |  25000 |     1250.0 |            5.0 |
+| 1.2 | 1   | Plumbing                |  33.8 |  61000 |     3050.0 |            5.0 |
+| 2.1 | 2   | Excavate                |  18.2 |  37000 |     1850.0 |            5.0 |
+| 2.2 | 2   | Steel Erection          |   5.8 |   9000 |      450.0 |            5.0 |
+| 3.1 | 3   | Masonry Work            |  16.2 |  62000 |     3100.0 |            5.0 |
+| 3.2 | 3   | Building Finishes       |  14.2 |  21500 |     1075.0 |            5.0 |
 
 [^1]: `id` is the default but any valid column name can be used. Values
     should be character data.
