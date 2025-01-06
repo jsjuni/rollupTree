@@ -31,7 +31,8 @@ pak::pak("jsjuni/rollup")
 
 ## Example
 
-Consider this example Work Breakdown Structure:
+Consider this example Work Breakdown Structure from
+[WorkBreakdownStructure.com](https://www.workbreakdownstructure.com):
 
 [![Example Work Breakdown Structure. Source:
 www.workbreakdownstructure.com](man/figures/README-wbs.jpg)](https://www.workbreakdownstructure.com)
@@ -82,7 +83,7 @@ search*. For that reason, we construct a graph object in R, from which
 we can conveniently (1) check that the graph is in fact a well-formed
 tree, and (2) efficiently execute a depth-first search to order the
 computations. (Note that, although the problems solved by rollup are
-recursive-defined, the implementation is not recursive.)
+*defined* recursively, the implementation in software is not recursive.)
 
 It is a simple matter to construct a graph from the information in our
 data frame:
@@ -102,9 +103,9 @@ wbs_tree <- igraph::graph_from_edgelist(
   directed = TRUE
 )
 wbs_tree
-#> IGRAPH e35e343 DN-- 10 9 -- 
+#> IGRAPH 3f15423 DN-- 10 9 -- 
 #> + attr: name (v/c)
-#> + edges from e35e343 (vertex names):
+#> + edges from 3f15423 (vertex names):
 #> [1] 1  ->top 2  ->top 3  ->top 1.1->1   1.2->1   2.1->2   2.2->2   3.1->3  
 #> [9] 3.2->3
 ```
@@ -302,6 +303,13 @@ The standard technique for accumulating uncertainties is to combine
 using root-sum-square (RSS).
 
 ``` r
+combine_rss <- function(vl) {
+  sqrt(Reduce(f = `+`, x = Map(
+    f = function(v)
+      v * v,
+    vl
+  )))
+}
 result5 <- rollup(
   tree = wbs_tree,
   ds = new_wbs_table,
@@ -311,13 +319,7 @@ result5 <- rollup(
       target = t,
       sources = s,
       prop = "budget_unc",
-      combine = function(vl) {
-        sqrt(Reduce(f = `+`, x = Map(
-          f = function(v)
-            v * v,
-          vl
-        )))
-      }
+      combine = combine_rss
     ),
   validate_ds = function(t, d)
     validate_df_by_id(tree = t, df = d, prop = "budget_unc"),
