@@ -15,6 +15,9 @@ df_get_by_key(df, key, keyval, prop)
 
 \item{prop}{Column name of the property value to get}
 }
+\value{
+The requested value
+}
 \description{
 \code{df_get_by_key} returns the value of specified property (column) in a specified row
 of a data frame. The row is specified by a key column and a value from that column.

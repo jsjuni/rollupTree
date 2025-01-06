@@ -112,8 +112,8 @@ my_get <- function(d, i) c(
   b=df_get_by_id(df=d, id=i, prop="budget")
 )
 my_set <- function(d, i, v) {
-  df_set_by_id(df=d, id=i, prop="work", value=v["w"]) |>
-    df_set_by_id(id=i, prop="budget", value=v["b"])
+  df_set_by_id(df=d, id=i, prop="work", val=v["w"]) |>
+    df_set_by_id(id=i, prop="budget", val=v["b"])
 }
 my_update <- function(d, t, s) {
     update_prop(ds=d, target=t, sources=s, set=my_set, get=my_get)

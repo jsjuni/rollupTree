@@ -34,6 +34,23 @@ test_that("update_rollup() works", {
   expect_equal(result[result$id == "top", "work"], 100)
 })
 
+test_that("update_rollup() on non-leaf fails", {
+  expect_error(
+    update_rollup(
+      wbs_tree,
+      wbs_table,
+      igraph::V(wbs_tree)["3"],
+      update = function(d, p, c) {
+        if (length(c) > 0)
+          d[d$id == p, c("work", "budget")] <-
+            apply(d[is.element(d$id, c), c("work", "budget")], 2, sum)
+        d
+      }
+    ),
+    "update_rollup on non-leaf"
+  )
+})
+
 test_that("validate_ds() detects mismatched ids", {
   bad_graph <- wbs_tree |> igraph::add_vertices(1, name = c("bad"))
   expect_error(validate_ds(bad_graph, wbs_table, function(d) d$id, function(d, l) d[d$id == l, "work"]),

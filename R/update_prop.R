@@ -85,7 +85,7 @@ df_get_ids <- function(df) df_get_keys(df, "id")
 #' @param keyval Value of the key for the specified row
 #' @param prop Column name of the property value to get
 #'
-#' @return
+#' @return The requested value
 #' @export
 #'
 #' @examples
@@ -102,7 +102,7 @@ df_get_by_key <- function(df, key, keyval, prop) df[df[, key] == keyval, prop]
 #' @param idval ID of the row to get
 #' @param prop Name of the column to get
 #'
-#' @return The desired value
+#' @return The requested value
 #' @export
 #'
 #' @examples

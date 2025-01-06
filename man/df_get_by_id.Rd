@@ -14,7 +14,7 @@ df_get_by_id(df, idval, prop)
 \item{prop}{Name of the column to get}
 }
 \value{
-The desired value
+The requested value
 }
 \description{
 \code{df_get_by_id} returns the value of specified property (column) in a specified row

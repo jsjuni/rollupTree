@@ -19,6 +19,16 @@ test_that("update_prop() works", {
   expect_equal(result2, expected2)
 })
 
+test_that("update_prop() on leaf target has no effect", {
+  result <- update_prop(wbs_table, "1.1", list(), function(d, k, v) {
+    d[d$id == k, c("work", "budget")] <- v
+    d
+  }, function(d, k)
+    d[d$id == k, c("work", "budget")], function(l)
+      Reduce("+", l))
+  expect_equal(result, wbs_table)
+})
+
 test_that("df_get_keys() and df_get_ids() work", {
   expected <- c("top", "1", "2", "3", "1.1", "1.2", "2.1", "2.2", "3.1", "3.2")
   expect_equal(df_get_keys(wbs_table, "id"), expected)

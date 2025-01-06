@@ -102,9 +102,9 @@ wbs_tree <- igraph::graph_from_edgelist(
   directed = TRUE
 )
 wbs_tree
-#> IGRAPH 8ff1f7d DN-- 10 9 -- 
+#> IGRAPH 9594183 DN-- 10 9 -- 
 #> + attr: name (v/c)
-#> + edges from 8ff1f7d (vertex names):
+#> + edges from 9594183 (vertex names):
 #> [1] 1  ->top 2  ->top 3  ->top 1.1->1   1.2->1   2.1->2   2.2->2   3.1->3  
 #> [9] 3.2->3
 ```
@@ -195,8 +195,8 @@ my_get <- function(d, i) c(
   b=df_get_by_id(df=d, id=i, prop="budget")
 )
 my_set <- function(d, i, v) {
-  df_set_by_id(df=d, id=i, prop="work", value=v["w"]) |>
-    df_set_by_id(id=i, prop="budget", value=v["b"])
+  df_set_by_id(df=d, id=i, prop="work", val=v["w"]) |>
+    df_set_by_id(id=i, prop="budget", val=v["b"])
 }
 my_update <- function(d, t, s) {
     update_prop(ds=d, target=t, sources=s, set=my_set, get=my_get)
