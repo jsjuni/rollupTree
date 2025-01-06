@@ -102,23 +102,30 @@ wbs_tree <- igraph::graph_from_edgelist(
   directed = TRUE
 )
 wbs_tree
-#> IGRAPH 9594183 DN-- 10 9 -- 
+#> IGRAPH 6589096 DN-- 10 9 -- 
 #> + attr: name (v/c)
-#> + edges from 9594183 (vertex names):
+#> + edges from 6589096 (vertex names):
 #> [1] 1  ->top 2  ->top 3  ->top 1.1->1   1.2->1   2.1->2   2.2->2   3.1->3  
 #> [9] 3.2->3
 ```
 
-With `wbs_table`, `wbs_tree`, and two helper methods, we can roll up the
-work values:
+Although our data in this first example is a data frame, `rollup()` can
+operate on an arbitrary R object if provided with update and validate
+methods for that object. For the common case in which the parameter of
+interest is a numeric column in a data frame, the combine operation is
+addition, and the key column is named “id”, the package provides
+`update_df_prop_by_id()` and `validate_df_by_id()` helper methods that
+can be invoked as boilerplate. To roll up the `work` property, for
+example, we simply invoke:
 
 ``` r
-knitr::kable(rollup(
+result1 <- rollup(
   tree=wbs_tree,
   ds=wbs_table,
   update=function(d, t, s) update_df_prop_by_id(df=d, target=t, sources=s, prop="work"),
   validate_ds=function(t, d) validate_df_by_id(tree=t, df=d, prop="work")
-))
+)
+knitr::kable(result1)
 ```
 
 | id  | pid | name                    |  work | budget |
@@ -134,8 +141,14 @@ knitr::kable(rollup(
 | 3.1 | 3   | Masonry Work            |  16.2 |  62000 |
 | 3.2 | 3   | Building Finishes       |  14.2 |  21500 |
 
+`update_df_prop_by_id()` (like every well-behaved update method)
+modifies only the specified column and leaves the rest of the data frame
+unchanged. If we want to roll up the `budget` column as well, we can
+simply chain two `rollup()` together. In this example we use R’s pipe
+operator:
+
 ``` r
-knitr::kable(rollup(
+result2 <- rollup(
   tree=wbs_tree,
   ds=wbs_table,
   update=function(d, t, s) update_df_prop_by_id(df=d, target=t, sources=s, prop="work"),
@@ -145,7 +158,8 @@ knitr::kable(rollup(
   ds=_,
   update=function(d, t, s) update_df_prop_by_id(df=d, target=t, sources=s, prop="budget"),
   validate_ds=function(t, d) validate_df_by_id(tree=t, df=d, prop="budget")
-))
+)
+knitr::kable(result2)
 ```
 
 | id  | pid | name                    |  work | budget |
@@ -160,20 +174,40 @@ knitr::kable(rollup(
 | 2.2 | 2   | Steel Erection          |   5.8 |   9000 |
 | 3.1 | 3   | Masonry Work            |  16.2 |  62000 |
 | 3.2 | 3   | Building Finishes       |  14.2 |  21500 |
+
+In most cases, this approach suffices. The code is simple and clear, and
+performance is not typically an issue. (In other testing `rollup()`
+performs tens of thousands of non-trivial property updates per second.)
+We show here some alternate approaches, mainly to illustrate
+architectural features of the approach that may be useful for more
+esoteric applications.
+
+A valid update method returns the updated data set, so we can chain two
+updates within a single `rollup()` instead of chaining two `rollup()`s.
+Similarly, a data set validator returns a logical value, so we can make
+the conjunction of two validators:
 
 ``` r
-knitr::kable(rollup(
-  tree=wbs_tree,
-  ds=wbs_table,
-  update=function(d, t, s) {
-    update_df_prop_by_id(df=d, target=t, sources=s, prop="work") |>
-      update_df_prop_by_id(target=t, sources=s, prop="budget")
+result3 <- rollup(
+  tree = wbs_tree,
+  ds = wbs_table,
+  update = function(d, t, s) {
+    update_df_prop_by_id(
+      df = d,
+      target = t,
+      sources = s,
+      prop = "work"
+    ) |>
+      update_df_prop_by_id(target = t,
+                           sources = s,
+                           prop = "budget")
   },
-  validate_ds=function(t, d) {
-    validate_df_by_id(tree=t, df=d, prop="work") &&
-      validate_df_by_id(tree=t, df=d, prop="budget")
+  validate_ds = function(t, d) {
+    validate_df_by_id(tree = t, df = d, prop = "work") &&
+      validate_df_by_id(tree = t, df = d, prop = "budget")
   }
-))
+)
+knitr::kable(result3)
 ```
 
 | id  | pid | name                    |  work | budget |
@@ -188,6 +222,14 @@ knitr::kable(rollup(
 | 2.2 | 2   | Steel Erection          |   5.8 |   9000 |
 | 3.1 | 3   | Masonry Work            |  16.2 |  62000 |
 | 3.2 | 3   | Building Finishes       |  14.2 |  21500 |
+
+In this example we create a custom *get* method that builds a named
+vector from the specified properties (using lower-level helper method
+`df_get_by_id()`) and a corresponding *set* method (using
+`df_set_by_id()`). We then create a custom *update* method using these
+methods. (The default *combine* method still works because R knows how
+to add vectors.) Finally, we create a custom data set validator and
+invoke `rollup()` with our custom methods.
 
 ``` r
 my_get <- function(d, i) c(
@@ -211,12 +253,13 @@ my_validate <- function(t, d) {
 my_check <- function(v)
   is.numeric(v) && !is.na(v)
 
-knitr::kable(rollup(
+result4 <- rollup(
   tree = wbs_tree,
   ds = wbs_table,
   update = my_update,
   validate_ds = my_validate
-))
+)
+knitr::kable(result4)
 ```
 
 | id  | pid | name                    |  work | budget |
@@ -231,6 +274,67 @@ knitr::kable(rollup(
 | 2.2 | 2   | Steel Erection          |   5.8 |   9000 |
 | 3.1 | 3   | Masonry Work            |  16.2 |  62000 |
 | 3.2 | 3   | Building Finishes       |  14.2 |  21500 |
+
+Finally, we illustrate the use of a custom combiner. Suppose we have 5%
+uncertainty in our leaf cost numbers. Add those uncertainty numbers to
+our data frame:
+
+``` r
+new_wbs_table <- result2
+new_wbs_table$budget_unc <- ifelse(is.na(wbs_table$budget), NA, wbs_table$budget * 0.05)
+new_wbs_table
+#>     id  pid                    name  work budget budget_unc
+#> 1  top <NA> Construction of a House 100.0 215500         NA
+#> 2    1  top                Internal  45.6  86000         NA
+#> 3    2  top              Foundation  24.0  46000         NA
+#> 4    3  top                External  30.4  83500         NA
+#> 5  1.1    1              Electrical  11.8  25000       1250
+#> 6  1.2    1                Plumbing  33.8  61000       3050
+#> 7  2.1    2                Excavate  18.2  37000       1850
+#> 8  2.2    2          Steel Erection   5.8   9000        450
+#> 9  3.1    3            Masonry Work  16.2  62000       3100
+#> 10 3.2    3       Building Finishes  14.2  21500       1075
+```
+
+The standard technique for accumulating uncertainties is to combine
+using root-sum-square (RSS).
+
+``` r
+result5 <- rollup(
+  tree = wbs_tree,
+  ds = new_wbs_table,
+  update = function(d, t, s)
+    update_df_prop_by_id(
+      df = d,
+      target = t,
+      sources = s,
+      prop = "budget_unc",
+      combine = function(vl) {
+        sqrt(Reduce(f = `+`, x = Map(
+          f = function(v)
+            v * v,
+          vl
+        )))
+      }
+    ),
+  validate_ds = function(t, d)
+    validate_df_by_id(tree = t, df = d, prop = "budget_unc"),
+)
+knitr::kable(result5)
+```
+
+| id  | pid | name                    |  work | budget | budget_unc |
+|:----|:----|:------------------------|------:|-------:|-----------:|
+| top | NA  | Construction of a House | 100.0 | 215500 |   5025.497 |
+| 1   | top | Internal                |  45.6 |  86000 |   3296.210 |
+| 2   | top | Foundation              |  24.0 |  46000 |   1903.943 |
+| 3   | top | External                |  30.4 |  83500 |   3281.101 |
+| 1.1 | 1   | Electrical              |  11.8 |  25000 |   1250.000 |
+| 1.2 | 1   | Plumbing                |  33.8 |  61000 |   3050.000 |
+| 2.1 | 2   | Excavate                |  18.2 |  37000 |   1850.000 |
+| 2.2 | 2   | Steel Erection          |   5.8 |   9000 |    450.000 |
+| 3.1 | 3   | Masonry Work            |  16.2 |  62000 |   3100.000 |
+| 3.2 | 3   | Building Finishes       |  14.2 |  21500 |   1075.000 |
 
 [^1]: `id` is the default but any valid column name can be used. Values
     should be character data.
