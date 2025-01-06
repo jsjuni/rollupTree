@@ -57,13 +57,14 @@ A key feature of recursively-defined problems like this is that the computations
 
 It is a simple matter to construct a graph from the information in our data frame:
 
-```{r}
+```{r wbs_tree-plot}
 library(igraph)
 wbs_tree <- igraph::graph_from_edgelist(
   as.matrix(wbs_table[which(!is.na(wbs_table$pid)), c("id", "pid")]),
   directed = TRUE
 )
-wbs_tree
+coords <- layout_(wbs_tree, as_tree(mode="in"))
+plot(wbs_tree, layout=coords, vertex.size=30)
 ```
 
 Although our data in this first example is a data frame, `rollup()` can operate on an arbitrary R object if provided with update and validate methods for that object. For the common case in which the parameter of interest is a numeric column in a data frame, the combine operation is addition, and the key column is named "id", the package provides `update_df_prop_by_id()` and `validate_df_by_id()` helper methods that can be invoked as boilerplate. To roll up the `work` property, for example, we simply invoke:

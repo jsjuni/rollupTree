@@ -102,13 +102,11 @@ wbs_tree <- igraph::graph_from_edgelist(
   as.matrix(wbs_table[which(!is.na(wbs_table$pid)), c("id", "pid")]),
   directed = TRUE
 )
-wbs_tree
-#> IGRAPH 3f15423 DN-- 10 9 -- 
-#> + attr: name (v/c)
-#> + edges from 3f15423 (vertex names):
-#> [1] 1  ->top 2  ->top 3  ->top 1.1->1   1.2->1   2.1->2   2.2->2   3.1->3  
-#> [9] 3.2->3
+coords <- layout_(wbs_tree, as_tree(mode="in"))
+plot(wbs_tree, layout=coords, vertex.size=30)
 ```
+
+<img src="man/figures/README-wbs_tree-plot-1.png" width="100%" />
 
 Although our data in this first example is a data frame, `rollup()` can
 operate on an arbitrary R object if provided with update and validate
