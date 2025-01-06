@@ -58,6 +58,7 @@ df_get_keys <- function(df, key) df[, key]
 #' @export
 #'
 #' @examples
+#' df_get_ids(wbs_table)
 df_get_ids <- function(df) df_get_keys(df, "id")
 
 # get property by key from data frame
@@ -76,6 +77,7 @@ df_get_by_key <- function(df, key, r, c) df[df[, key] == r, c]
 #' @export
 #'
 #' @examples
+#' df_get_by_id(wbs_table, "1.1", "work")
 df_get_by_id <- function(df, id, prop) df[df[, "id"] == id, prop]
 
 # set property by key in data frame
@@ -98,6 +100,7 @@ df_set_by_key <- function(df, key, r, c, v) {
 #' @export
 #'
 #' @examples
+#' df_set_by_id(wbs_table, "1", "work", 45.6)
 df_set_by_id <- function(df, id, prop, value) {
   df[df[, "id"] == id, prop] <- value
   df

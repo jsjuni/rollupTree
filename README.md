@@ -101,8 +101,10 @@ wbs_tree <- igraph::graph_from_edgelist(
   as.matrix(wbs_table[which(!is.na(wbs_table$pid)), c("id", "pid")]),
   directed = TRUE
 )
-E(wbs_tree)
-#> + 9/9 edges from 75e79b8 (vertex names):
+wbs_tree
+#> IGRAPH 8ff1f7d DN-- 10 9 -- 
+#> + attr: name (v/c)
+#> + edges from 8ff1f7d (vertex names):
 #> [1] 1  ->top 2  ->top 3  ->top 1.1->1   1.2->1   2.1->2   2.2->2   3.1->3  
 #> [9] 3.2->3
 ```

@@ -21,3 +21,6 @@ The updated dataframe
 \description{
 Title
 }
+\examples{
+df_set_by_id(wbs_table, "1", "work", 45.6)
+}

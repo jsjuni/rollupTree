@@ -15,3 +15,6 @@ All of the "id" column
 \description{
 Title
 }
+\examples{
+df_get_ids(wbs_table)
+}

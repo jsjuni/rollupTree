@@ -19,3 +19,6 @@ The desired value
 \description{
 Title
 }
+\examples{
+df_get_by_id(wbs_table, "1.1", "work")
+}

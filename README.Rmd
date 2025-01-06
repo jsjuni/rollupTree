@@ -63,7 +63,7 @@ wbs_tree <- igraph::graph_from_edgelist(
   as.matrix(wbs_table[which(!is.na(wbs_table$pid)), c("id", "pid")]),
   directed = TRUE
 )
-E(wbs_tree)
+wbs_tree
 ```
 
 With `wbs_table`, `wbs_tree`, and two helper methods, we can roll up the work values:
