@@ -2,14 +2,14 @@
 % Please edit documentation in R/update_prop.R
 \name{df_get_by_id}
 \alias{df_get_by_id}
-\title{Title}
+\title{Get property by key "id" from data frame}
 \usage{
-df_get_by_id(df, id, prop)
+df_get_by_id(df, idval, prop)
 }
 \arguments{
 \item{df}{A data frame}
 
-\item{id}{ID of the row to get}
+\item{idval}{ID of the row to get}
 
 \item{prop}{Name of the column to get}
 }
@@ -17,7 +17,8 @@ df_get_by_id(df, id, prop)
 The desired value
 }
 \description{
-Title
+\code{df_get_by_id} returns the value of specified property (column) in a specified row
+of a data frame. The row is specified by a value for the \code{id} column.
 }
 \examples{
 df_get_by_id(wbs_table, "1.1", "work")

@@ -1,7 +1,7 @@
 #' Update a data set with recursively-defined properties
 #'
 #' @description
-#' `update_prop()` calls user-specified methods to get properties
+#' `update_prop` calls user-specified methods to get properties
 #' of a source set of elements in a data set, combine those properties,
 #' and set the properties of a target element to the combined value.
 #' If the source set is empty, the data set is returned unmodified. The
@@ -9,7 +9,7 @@
 #'
 #' The `override` argument can be used to selectively override the
 #' computed value based on the target element. By default, it simply
-#' returns the value computed by combine().
+#' returns the value computed by `combine`.
 #'
 #' @param ds Data set to be updated
 #' @param target Key of data set element to be updated
@@ -44,33 +44,62 @@ update_prop <- function(ds, target, sources, set, get,
 
 # helper methods for data frames
 
-# get keys from data frame
-
+#' Get keys from a data frame
+#'
+#' @description
+#' `df_get_keys` gets all values from a designated column in a data frame.
+#'
+#' @param df A data frame
+#' @param key Name of the column used as key
+#'
+#' @return All values of the key column
+#' @export
+#'
+#' @examples
+#' df_get_keys(wbs_table, "id")
 df_get_keys <- function(df, key) df[, key]
 
-# get ids from data frame (key="id")
-
-#' Title
+#' Get ids from a data frame
+#'
+#' @description
+#' The default name for a key column in `rollup` is `id`. `df_get_ids` gets all values
+#' from the `id` column in a data frame.
 #'
 #' @param df A data frame
 #'
-#' @return All of the "id" column
+#' @return All values of the `id` column
 #' @export
 #'
 #' @examples
 #' df_get_ids(wbs_table)
 df_get_ids <- function(df) df_get_keys(df, "id")
 
-# get property by key from data frame
-
-df_get_by_key <- function(df, key, r, c) df[df[, key] == r, c]
-
-# get property by key="id" from data frame
-
-#' Title
+#' Get property by key from data frame
+#'
+#' @description
+#' `df_get_by_key` returns the value of specified property (column) in a specified row
+#' of a data frame. The row is specified by a key column and a value from that column.
 #'
 #' @param df A data frame
-#' @param id ID of the row to get
+#' @param key Name of the column used as key
+#' @param keyval Value of the key for the specified row
+#' @param prop Column name of the property value to get
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' df_get_by_key(wbs_table, "id", "1", "work")
+df_get_by_key <- function(df, key, keyval, prop) df[df[, key] == keyval, prop]
+
+#' Get property by key "id" from data frame
+#'
+#' @description
+#' `df_get_by_id` returns the value of specified property (column) in a specified row
+#' of a data frame. The row is specified by a value for the `id` column.
+#'
+#' @param df A data frame
+#' @param idval ID of the row to get
 #' @param prop Name of the column to get
 #'
 #' @return The desired value
@@ -78,31 +107,40 @@ df_get_by_key <- function(df, key, r, c) df[df[, key] == r, c]
 #'
 #' @examples
 #' df_get_by_id(wbs_table, "1.1", "work")
-df_get_by_id <- function(df, id, prop) df[df[, "id"] == id, prop]
+df_get_by_id <- function(df, idval, prop) df[df[, "id"] == idval, prop]
 
-# set property by key in data frame
-
-df_set_by_key <- function(df, key, r, c, v) {
-  df[df[, key] == r, c] <- v
+#' Set property by key in data frame
+#'
+#' @param df A data frame
+#' @param key Name of the column used as key
+#' @param keyval Value of the key for the specified row
+#' @param prop Column name of the property value to get
+#' @param val Value to set
+#'
+#' @return The updated data frame
+#' @export
+#'
+#' @examples
+#' df_set_by_key(wbs_table, "id", "1", "work", 45.6)
+df_set_by_key <- function(df, key, keyval, prop, val) {
+  df[df[, key] == keyval, prop] <- val
   df
 }
 
-# set property by key="id" in data frame
-
-#' Title
+#' Set property by key "id" in data frame
 #'
 #' @param df A data frame
-#' @param id ID of the row to set
-#' @param prop Name of the column to set
-#' @param value Value to set
+#' @param idval ID Value for the specified row
+#' @param prop Column name of the property value to get
+#' @param val Value to set
 #'
-#' @return The updated dataframe
+#' @return The updated data frame
 #' @export
 #'
 #' @examples
 #' df_set_by_id(wbs_table, "1", "work", 45.6)
-df_set_by_id <- function(df, id, prop, value) {
-  df[df[, "id"] == id, prop] <- value
+df_set_by_id <- function(df, idval, prop, val) {
+  df[df[, "id"] == idval, prop] <- val
   df
 }
 

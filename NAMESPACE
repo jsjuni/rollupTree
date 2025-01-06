@@ -2,8 +2,11 @@
 
 export(default_validate_tree)
 export(df_get_by_id)
+export(df_get_by_key)
 export(df_get_ids)
+export(df_get_keys)
 export(df_set_by_id)
+export(df_set_by_key)
 export(rollup)
 export(update_df_prop_by_id)
 export(update_df_prop_by_key)

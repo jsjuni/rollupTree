@@ -2,24 +2,24 @@
 % Please edit documentation in R/update_prop.R
 \name{df_set_by_id}
 \alias{df_set_by_id}
-\title{Title}
+\title{Set property by key "id" in data frame}
 \usage{
-df_set_by_id(df, id, prop, value)
+df_set_by_id(df, idval, prop, val)
 }
 \arguments{
 \item{df}{A data frame}
 
-\item{id}{ID of the row to set}
+\item{idval}{ID Value for the specified row}
 
-\item{prop}{Name of the column to set}
+\item{prop}{Column name of the property value to get}
 
-\item{value}{Value to set}
+\item{val}{Value to set}
 }
 \value{
-The updated dataframe
+The updated data frame
 }
 \description{
-Title
+Set property by key "id" in data frame
 }
 \examples{
 df_set_by_id(wbs_table, "1", "work", 45.6)

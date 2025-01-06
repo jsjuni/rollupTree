@@ -33,7 +33,7 @@ update_prop(
 Updated data set
 }
 \description{
-\code{update_prop()} calls user-specified methods to get properties
+\code{update_prop} calls user-specified methods to get properties
 of a source set of elements in a data set, combine those properties,
 and set the properties of a target element to the combined value.
 If the source set is empty, the data set is returned unmodified. The
@@ -41,7 +41,7 @@ default combine operation is addition.
 
 The \code{override} argument can be used to selectively override the
 computed value based on the target element. By default, it simply
-returns the value computed by combine().
+returns the value computed by \code{combine}.
 }
 \examples{
 update_prop(wbs_table, "1", list("1.1", "1.2"),
