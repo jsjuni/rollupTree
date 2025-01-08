@@ -1,4 +1,5 @@
 ## code to prepare `wbs_data` dataset goes here
+library(igraph)
 
 ## Example adapted from https://www.workbreakdownstructure.com
 
