@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(rollup)
+library(rollupTree)
 
-test_check("rollup")
+test_check("rollupTree")

@@ -6,13 +6,13 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-Rollup is a general framework for solving problems in which some
+`rollupTree` is a general framework for solving problems in which some
 property a parent element is some combination of corresponding
 properties of its child elements. The mass of an assembly, for example,
-can be construed as the sum of the masses of its subassemblies, and the
-mass of each subassembly is the sum of masses of its parts.
+is the sum of the masses of its subassemblies, and the mass of each
+subassembly is the sum of masses of its parts.
 
-Rollup can solve problems specified by arbitrarily-shaped (but
+`rollupTree` can solve problems specified by arbitrarily-shaped (but
 well-formed) trees, arbitrarily-defined properties and
 property-combining operations. Defaults are provided to simplify common
 cases (atomic numerical properties combined by summing), but functional
@@ -21,12 +21,12 @@ and *combine* methods at runtime.
 
 ## Installation
 
-You can install the development version of rollup from
+You can install the development version of `rollupTree` from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("jsjuni/rollup")
+pak::pak("jsjuni/rollupTree")
 ```
 
 ## Example
@@ -57,7 +57,7 @@ also indicate parent id in the `pid` column but this information is not
 used directly by `rollup()`.
 
 ``` r
-library(rollup)
+library(rollupTree)
 knitr::kable(wbs_table)
 ```
 
@@ -143,7 +143,7 @@ knitr::kable(result1)
 `update_df_prop_by_id()` (like every well-behaved update method)
 modifies only the specified column and leaves the rest of the data frame
 unchanged. If we want to roll up the `budget` column as well, we can
-simply chain two `rollup()` together. In this example we use R’s pipe
+simply chain two `rollup()`s together. In this example we use R’s pipe
 operator:
 
 ``` r

@@ -19,17 +19,17 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-Rollup is a general framework for solving problems in which some property a parent element is some combination of corresponding properties of its child elements. The mass of an assembly, for example, can be construed as the sum of the masses of its subassemblies, and the mass of each subassembly is the sum of masses of its parts.
+`rollupTree` is a general framework for solving problems in which some property a parent element is some combination of corresponding properties of its child elements. The mass of an assembly, for example, is the sum of the masses of its subassemblies, and the mass of each subassembly is the sum of masses of its parts.
 
-Rollup can solve problems specified by arbitrarily-shaped (but well-formed) trees, arbitrarily-defined properties and property-combining operations. Defaults are provided to simplify common cases (atomic numerical properties combined by summing), but functional programming techniques allow the caller to pass arbitrary *get*, *set*, and *combine* methods at runtime.
+`rollupTree` can solve problems specified by arbitrarily-shaped (but well-formed) trees, arbitrarily-defined properties and property-combining operations. Defaults are provided to simplify common cases (atomic numerical properties combined by summing), but functional programming techniques allow the caller to pass arbitrary *get*, *set*, and *combine* methods at runtime.
 
 ## Installation
 
-You can install the development version of rollup from [GitHub](https://github.com/) with:
+You can install the development version of `rollupTree` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("jsjuni/rollup")
+pak::pak("jsjuni/rollupTree")
 ```
 
 ## Example
@@ -49,7 +49,7 @@ We begin by capturing the structure of the tree and asserted values in a data fr
 [^1]: `id` is the default but any valid column name can be used. Values should be character data.
 
 ```{r example}
-library(rollup)
+library(rollupTree)
 knitr::kable(wbs_table)
 ```
 
@@ -79,7 +79,7 @@ result1 <- rollup(
 knitr::kable(result1)
 ```
 
-`update_df_prop_by_id()` (like every well-behaved update method) modifies only the specified column and leaves the rest of the data frame unchanged. If we want to roll up the `budget` column as well, we can simply chain two `rollup()` together. In this example we use R's pipe operator:
+`update_df_prop_by_id()` (like every well-behaved update method) modifies only the specified column and leaves the rest of the data frame unchanged. If we want to roll up the `budget` column as well, we can simply chain two `rollup()`s together. In this example we use R's pipe operator:
 
 ```{r}
 result2 <- rollup(
