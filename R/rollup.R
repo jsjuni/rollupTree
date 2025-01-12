@@ -1,19 +1,25 @@
 #' Perform recursive analysis
 #'
 #' @description `rollup()` traverses a tree in depth-first postorder and calls a
-#' user-specified update method on each vertex, passing it a data set, the id of
-#' that vertex in the data set, and a list of child ids for that vertex. The
-#' update method should perform the desired operation, update the data set, and
-#' return the updated data set.
+#' user-specified update method on each vertex, passing the method a data set, the key of
+#' that vertex in the data set, and a list of child keys. The
+#' update method returns the updated data set. The final result reflects an update at
+#' every non-leaf vertex of the tree.
 #'
 #' An `update_prop()` helper function is available to simplify building
 #' compliant update methods.
 #'
-#' Before beginning the traversal, `rollup()` ensures that the tree is
-#' well-formed. It also ensures (by default, see `default_validate_tree()`) that
+#' Before beginning the traversal, `rollup()` calls a user-specified method
+#' to validate that the tree is
+#' well-formed (see [default_validate_tree()]). It also calls a user-specified
+#' method to ensure that the data set
 #' the id sets of the tree and data set are identical, and that data set
 #' elements corresponding to leaf vertices in the tree satisfy some
 #' user-specified predicate, e.g., `is.numeric()`.
+#'
+#' @details
+#' The data set passed to `rollup()` can be any object for which an `update()`
+#' method can be written. A common and simple example is a data frame, but
 #'
 #' @param tree An igraph directed graph that is a valid single-rooted in-tree
 #' @param ds A data set to be updated; can be any object
@@ -26,7 +32,7 @@
 #' @export
 #'
 #' @examples
-#'  rollup(wbs_tree, wbs_table,
+#' rollup(wbs_tree, wbs_table,
 #'   update = function(d, p, c) {
 #'     if (length(c) > 0)
 #'       d[d$id == p, c("work", "budget")] <-

@@ -1,0 +1,195 @@
+---
+title: "rollupTree"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{rollupTree}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(rollupTree)
+```
+
+# Overview
+
+`rollupTree` is a general framework for solving problems in which some property of a parent element is a combination of corresponding properties of its child elements. The mass of an assembly, for example, is the sum of the masses of its subassemblies, the mass of each subassembly is the sum of masses of its parts, etc.
+
+`rollupTree` can solve problems specified by arbitrarily-shaped (but well-formed) trees, arbitrarily-defined properties and property-combining operations. Defaults and helpers are provided to simplify common cases (atomic numerical properties combined by summing), but functional programming techniques allow the caller to pass arbitrary *get*, *set*, and *combine* methods as required.
+
+# Example
+
+Consider this example Work Breakdown Structure from [WorkBreakdownStructure.com](https://www.workbreakdownstructure.com):
+
+[![Example Work Breakdown Structure. Source: www.workbreakdownstructure.com](wbs.jpg)](https://www.workbreakdownstructure.com)
+
+The computations in the example are worked out already; we show here how to reproduce them.
+
+A Work Breakdown Structure is a tree, that is, a graph that is connected and acyclic. It is, in addition, directed, that is, the edges have direction. We arbitrarily chose the edge direction to go from child to parent. Finally, it is single-rooted: every vertex but one has a single parent vertex; the root vertex has no parent.
+
+The leaf elements (vertices) of the tree require asserted values for the properties (work, budget) of interest. Property values for non-leaf elements are computed by the rollup operation.
+
+We begin by capturing the structure of the tree and asserted values in a data frame we call `wbs_table`. Values to be computed are initially unknown. Each element is uniquely identified by an `id` column[^1]. We also indicate parent id in the `pid` column but this information is not used directly by `rollup()`.
+
+[^1]: `id` is the default but any valid column name can be used. Values should be character data.
+
+```{r example}
+library(rollupTree)
+wbs_table
+```
+
+A key feature of recursively-defined problems like this is that the computations must be ordered in such a way that the computations for a given element must occur after properties for it children are known (either asserted or computed). Traversing a tree in this manner is a well-known algorithm in graph theory known as *depth-first (postorder) search*. For that reason, we construct a graph object in R, from which we can conveniently (1) check that the graph is in fact a well-formed tree, and (2) efficiently execute a depth-first search to order the computations. (Note that, although the problems solved by rollup are *defined* recursively, the implementation in software is not recursive.)
+
+It is a simple matter to construct a graph from the information in our data frame:
+
+```{r wbs_tree-plot}
+library(igraph)
+wbs_tree <- igraph::graph_from_edgelist(
+  as.matrix(wbs_table[which(!is.na(wbs_table$pid)), c("id", "pid")]),
+  directed = TRUE
+)
+coords <- layout_(wbs_tree, as_tree(mode="in"))
+plot(wbs_tree, layout=coords, vertex.size=30)
+```
+
+## Summing a Single Numeric Property
+
+Although our data in this first example is a data frame, `rollup()` can operate on an arbitrary R object if provided with update and validate methods for that object. For the common case in which the parameter of interest is a numeric column in a data frame, the combine operation is addition, and the key column is named "id", the package provides `update_df_prop_by_id()` and `validate_df_by_id()` helper methods that can be invoked as boilerplate. To roll up the `work` property, for example, we simply invoke:
+
+```{r}
+rollup(
+  tree=wbs_tree,
+  ds=wbs_table,
+  update=function(d, t, s) update_df_prop_by_id(df=d, target=t, sources=s, prop="work"),
+  validate_ds=function(t, d) validate_df_by_id(tree=t, df=d, prop="work")
+)
+```
+
+`update_df_prop_by_id()` (like every well-behaved update method) modifies only the specified column and leaves the rest of the data frame unchanged. If we want to roll up the `budget` column as well, we can simply chain two `rollup()`s together. In this example we use R's pipe operator:
+
+```{r}
+rollup(
+  tree=wbs_tree,
+  ds=wbs_table,
+  update=function(d, t, s) update_df_prop_by_id(df=d, target=t, sources=s, prop="work"),
+  validate_ds=function(t, d) validate_df_by_id(tree=t, df=d, prop="work")
+) |> rollup(
+  tree=wbs_tree,
+  ds=_,
+  update=function(d, t, s) update_df_prop_by_id(df=d, target=t, sources=s, prop="budget"),
+  validate_ds=function(t, d) validate_df_by_id(tree=t, df=d, prop="budget")
+)
+```
+
+In most cases, this approach suffices. The code is simple and clear, and performance is not typically an issue. (In other testing `rollup()` performs tens of thousands of non-trivial property updates per second.) We show here some alternate approaches, mainly to illustrate architectural features of the approach that may be useful for more esoteric applications.
+
+## Chaining Update Methods
+
+A valid update method returns the updated data set, so we can chain two updates within a single `rollup()` instead of chaining two `rollup()`s. Similarly, a data set validator returns a logical value, so we can make the conjunction of two validators:
+
+```{r}
+rollup(
+  tree = wbs_tree,
+  ds = wbs_table,
+  update = function(d, t, s) {
+    update_df_prop_by_id(
+      df = d,
+      target = t,
+      sources = s,
+      prop = "work"
+    ) |>
+      update_df_prop_by_id(target = t,
+                           sources = s,
+                           prop = "budget")
+  },
+  validate_ds = function(t, d) {
+    validate_df_by_id(tree = t, df = d, prop = "work") &&
+      validate_df_by_id(tree = t, df = d, prop = "budget")
+  }
+)
+```
+
+## Custom *get*, *set*, and *update* Methods
+
+In this example we create a custom *get* method that builds a named vector from the specified properties (using lower-level helper method `df_get_by_id()`) and a corresponding *set* method (using `df_set_by_id()`). We then create a custom *update* method using these methods. (The default *combine* method still works because R knows how to add vectors.) Finally, we create a custom data set validator and invoke `rollup()` with our custom methods.
+
+```{r}
+my_get <- function(d, i) c(
+  w=df_get_by_id(df=d, id=i, prop="work"),
+  b=df_get_by_id(df=d, id=i, prop="budget")
+)
+my_set <- function(d, i, v) {
+  df_set_by_id(df=d, id=i, prop="work", val=v["w"]) |>
+    df_set_by_id(id=i, prop="budget", val=v["b"])
+}
+my_update <- function(d, t, s) {
+    update_prop(ds=d, target=t, sources=s, set=my_set, get=my_get)
+}
+my_validate <- function(t, d) {
+  validate_ds(tree=t, ds=d,
+               get_keys=function(d) df_get_ids(df=d),
+               get_prop=my_get,
+               op=function(v) my_check(v["w"]) && my_check(v["b"])
+  )
+}
+my_check <- function(v)
+  is.numeric(v) && !is.na(v) && (v > 0.0)
+
+rollup(
+  tree = wbs_tree,
+  ds = wbs_table,
+  update = my_update,
+  validate_ds = my_validate
+)
+```
+
+## Custom *combine* Method
+
+Finally, we illustrate the use of a custom combiner. Suppose we have 5% uncertainty in our leaf cost numbers. Add those uncertainty numbers to our data frame:
+
+```{r}
+new_wbs_table <- wbs_table
+new_wbs_table$work <- NULL
+new_wbs_table$budget_unc <- ifelse(is.na(wbs_table$budget), NA, wbs_table$budget * 0.05)
+new_wbs_table
+```
+
+The standard technique for accumulating uncertainties is to combine using root-sum-square (RSS).
+
+```{r}
+combine_rss <- function(vl) {
+  sqrt(Reduce(f = `+`, x = Map(
+    f = function(v)
+      v * v,
+    vl
+  )))
+}
+result <- rollup(
+  tree = wbs_tree,
+  ds = new_wbs_table,
+  update = function(d, t, s)
+    update_df_prop_by_id(
+      df = d,
+      target = t,
+      sources = s,
+      prop = "budget"
+    ) |>
+    update_df_prop_by_id(
+      target = t,
+      sources = s,
+      prop = "budget_unc",
+      combine = combine_rss
+    ),
+  validate_ds = function(t, d)
+    validate_df_by_id(tree = t, df = d, prop = "budget_unc"),
+)
+result$budget_unc_pct <- result$budget_unc / result$budget * 100.
+result
+```
