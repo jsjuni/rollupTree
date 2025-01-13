@@ -23,7 +23,7 @@ library(rollupTree)
 
 `rollupTree` is a general framework for computations in which some property of a parent element is a combination of corresponding properties of its child elements. The mass of an assembly, for example, is the sum of the masses of its subassemblies, the mass of each subassembly is the sum of masses of its parts, etc.
 
-`rollupTree` can solve problems specified by arbitrarily-shaped (but well-formed) trees, arbitrarily-defined properties and property-combining operations. Defaults and helpers are provided to simplify common cases (atomic numerical properties combined by summing), but functional programming techniques allow the caller to pass arbitrary *get*, *set*, and *combine* methods as required.
+`rollupTree` can perform computations specified by arbitrarily-shaped (but well-formed) trees, arbitrarily-defined properties and property-combining operations. Defaults and helpers are provided to simplify common cases (atomic numerical properties combined by summing), but functional programming techniques allow the caller to pass arbitrary *update* methods as required.
 
 # Example With A Data Frame
 
@@ -208,13 +208,52 @@ wbs_list <- lapply(split(wbs_table, wbs_table$id),
 str(wbs_list)
 ```
 
-We can roll up the budget with get, set, and update functions as follows:
+We construct *update* and *validate* functions as follows:
 
 ```{r}
-get <- function(d, i) d[[i]]$budget
-set <- function(d, i, v) { d[[i]]$budget = v; d }
-update <- function(d, t, s) { update_prop(d, t, s, set, get) }
-validate <- function(t, d) validate_ds(t, d, get_keys = function(l) names(l), get)
-result <- rollup(wbs_tree, wbs_list, update, validate)
-str(result)
+list_get <- function(d, i) d[[i]]$budget
+list_set <- function(d, i, v) { d[[i]]$budget = v; d }
+list_update <- function(d, t, s) { update_prop(d, t, s, list_set, list_get) }
+list_validate <- function(t, d) validate_ds(t, d, get_keys = function(l) names(l), get = list_get)
+```
+
+The output of `rollup()` is as expected:
+
+```{r}
+list_result <- rollup(wbs_tree, wbs_list, list_update, list_validate)
+str(list_result)
+
+```
+
+# Example With A Tree
+
+The tree can serve as the dataset with proper attributes and methods. To illustrate, we add the budget figures from our data frame as vertex attributes to the tree:
+
+```{r}
+new_wbs_tree <- Reduce(
+  f = function(g, k) set_vertex_attr(g, 'budget', k, df_get_by_id(wbs_table, k, 'budget')),
+  x = names(V(wbs_tree)),
+  init = wbs_tree
+)
+ib <- vertex_attr(new_wbs_tree, "budget")
+names(ib) <- names(V(new_wbs_tree))
+ib
+```
+
+We construct *update* and *validate* functions as follows:
+
+```{r}
+tree_get <- function(d, k) vertex_attr(d, "budget", k)
+tree_set <- function(d, k, v) set_vertex_attr(d, "budget", k, v)
+tree_update <- function(d, t, s) update_prop(d, t, s, set = tree_set, get = tree_get)
+tree_validate <- function(t, d) validate_ds(t, d, get_keys = function(d) names(V(d)), get = tree_get)
+```
+
+The output of `rollup()` is as expected:
+
+```{r}
+tree_result <- rollup(new_wbs_tree, new_wbs_tree, update = tree_update, validate_ds = tree_validate)
+ob <- vertex_attr(tree_result, "budget")
+names(ob) <- names(V(tree_result))
+ob
 ```
