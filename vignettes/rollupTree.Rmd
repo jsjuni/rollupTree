@@ -24,7 +24,7 @@ library(rollupTree)
 
 `rollupTree` can solve problems specified by arbitrarily-shaped (but well-formed) trees, arbitrarily-defined properties and property-combining operations. Defaults and helpers are provided to simplify common cases (atomic numerical properties combined by summing), but functional programming techniques allow the caller to pass arbitrary *get*, *set*, and *combine* methods as required.
 
-# Example
+# Example With A Data Frame
 
 Consider this example Work Breakdown Structure from [WorkBreakdownStructure.com](https://www.workbreakdownstructure.com):
 
@@ -192,4 +192,26 @@ result <- rollup(
 )
 result$budget_unc_pct <- result$budget_unc / result$budget * 100.
 result
+```
+
+# Example With A List
+
+Suppose instead of a data frame we have a list of lists:
+
+```{r}
+wbs_list <- lapply(split(wbs_table, wbs_table$id),
+                   function(r) list(name = r$name, budget = r$budget)
+)
+str(wbs_list)
+```
+
+We can roll up the budget with get, set, and update functions as follows:
+
+```{r}
+get <- function(d, i) d[[i]]$budget
+set <- function(d, i, v) { d[[i]]$budget = v; d }
+update <- function(d, t, s) { update_prop(d, t, s, set, get) }
+validate <- function(t, d) validate_ds(t, d, get_keys = function(l) names(l), get)
+result <- rollup(wbs_tree, wbs_list, update, validate)
+str(result)
 ```
