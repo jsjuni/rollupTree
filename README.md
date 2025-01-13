@@ -6,11 +6,11 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-`rollupTree` is a general framework for computations in which some
-property of a parent element is some combination of corresponding
+`rollupTree` implements a general function for computations in which
+some property of a parent element is a combination of corresponding
 properties of its child elements. The mass of an assembly, for example,
 is the sum of the masses of its subassemblies, and the mass of each
-subassembly is the sum of masses of its parts.
+subassembly is the sum of masses of its parts, etc.
 
 `rollupTree` can perform computations specified by arbitrarily-shaped
 (but well-formed) trees, arbitrarily-defined properties and
