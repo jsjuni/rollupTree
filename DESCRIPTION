@@ -23,4 +23,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-URL: https://jsjuni.github.io/rollupTree/
+URL: https://jsjuni.github.io/rollupTree/, https://github.com/jsjuni/rollupTree
+BugReports: https://github.com/jsjuni/rollupTree/issues
