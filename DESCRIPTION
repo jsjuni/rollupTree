@@ -2,7 +2,7 @@ Package: rollupTree
 Title: Framework for Recursive Analysis
 Version: 0.0.0.9000
 Authors@R: 
-    person("James", "Steven", "Jenkins",
+    person(given="James", middle="Steven", family="Jenkins",
       email = "sjenkins@studioj.us",
       role = c("aut", "cre"),
       comment = c(ORCID = "0000-0002-0725-0884")
