@@ -21,7 +21,7 @@ library(rollupTree)
 
 # Overview
 
-`rollupTree` is a general framework for solving problems in which some property of a parent element is a combination of corresponding properties of its child elements. The mass of an assembly, for example, is the sum of the masses of its subassemblies, the mass of each subassembly is the sum of masses of its parts, etc.
+`rollupTree` is a general framework for computations in which some property of a parent element is a combination of corresponding properties of its child elements. The mass of an assembly, for example, is the sum of the masses of its subassemblies, the mass of each subassembly is the sum of masses of its parts, etc.
 
 `rollupTree` can solve problems specified by arbitrarily-shaped (but well-formed) trees, arbitrarily-defined properties and property-combining operations. Defaults and helpers are provided to simplify common cases (atomic numerical properties combined by summing), but functional programming techniques allow the caller to pass arbitrary *get*, *set*, and *combine* methods as required.
 

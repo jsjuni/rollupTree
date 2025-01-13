@@ -24,10 +24,10 @@ updated input data set
 }
 \description{
 \code{rollup()} traverses a tree depth-first (post order) and calls a
-user-specified update method at each vertex, passing the method a data set,
+user-specified update function at each vertex, passing the method a data set,
 the unique key of that target vertex in the data set, and a list of source
-keys. The update method by default gets some properties of the source
-elements of the data set, combines them,  sets some properties of the
+keys. The update method typically gets some properties of the source
+elements of the data set, combines them, sets some properties of the
 target element of the data set to the combined value, and returns the
 updated data set as input to the update of the next vertex. The final
 operation updates the root vertex.
