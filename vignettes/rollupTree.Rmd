@@ -10,7 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 6
 )
 ```
 
@@ -55,9 +56,11 @@ wbs_tree <- igraph::graph_from_edgelist(
   as.matrix(wbs_table[which(!is.na(wbs_table$pid)), c("id", "pid")]),
   directed = TRUE
 )
-coords <- layout_(wbs_tree, as_tree(mode="in"))
-plot(wbs_tree, layout=coords, vertex.size=30)
 ```
+
+## ![WBS Tree](wbs_tree.png)
+
+<!--# plot created by coords <- layout_(wbs_tree, as_tree(mode="in")) plot(wbs_tree, layout=coords, vertex.size = 30) -->
 
 ## Summing a Single Numeric Property
 

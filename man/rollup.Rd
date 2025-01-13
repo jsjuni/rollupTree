@@ -2,46 +2,50 @@
 % Please edit documentation in R/rollup.R
 \name{rollup}
 \alias{rollup}
-\title{Perform recursive analysis}
+\title{Perform recursive computation}
 \usage{
 rollup(tree, ds, update, validate_ds, validate_tree = default_validate_tree)
 }
 \arguments{
-\item{tree}{An igraph directed graph that is a valid single-rooted in-tree}
+\item{tree}{\code{igraph} directed graph that is a valid single-rooted in-tree
+and whose vertex names are keys from the data set}
 
-\item{ds}{A data set to be updated; can be any object}
+\item{ds}{data set to be updated; can be any object}
 
-\item{update}{The update method called at each vertex as update(ds,
+\item{update}{function called at each vertex as update(ds,
 parent_key, child_keys)}
 
-\item{validate_ds}{The data set validator called as validate_ds(tree, ds)}
+\item{validate_ds}{data set validator function called as validate_ds(tree, ds)}
 
-\item{validate_tree}{The tree validator called as validate_tree(tree)}
+\item{validate_tree}{tree validator function called as validate_tree(tree)}
 }
 \value{
-The updated data set
+updated input data set
 }
 \description{
-\code{rollup()} traverses a tree in depth-first postorder and calls a
-user-specified update method on each vertex, passing the method a data set, the key of
-that vertex in the data set, and a list of child keys. The
-update method returns the updated data set. The final result reflects an update at
-every non-leaf vertex of the tree.
+\code{rollup()} traverses a tree depth-first (post order) and calls a
+user-specified update method at each vertex, passing the method a data set,
+the unique key of that target vertex in the data set, and a list of source
+keys. The update method by default gets some properties of the source
+elements of the data set, combines them,  sets some properties of the
+target element of the data set to the combined value, and returns the
+updated data set as input to the update of the next vertex. The final
+operation updates the root vertex.
 
 An \code{update_prop()} helper function is available to simplify building
 compliant update methods.
 
-Before beginning the traversal, \code{rollup()} calls a user-specified method
-to validate that the tree is
-well-formed (see \code{\link[=default_validate_tree]{default_validate_tree()}}). It also calls a user-specified
-method to ensure that the data set
-the id sets of the tree and data set are identical, and that data set
-elements corresponding to leaf vertices in the tree satisfy some
-user-specified predicate, e.g., \code{is.numeric()}.
+Before beginning the traversal, \code{rollup()} calls a user-specified method to
+validate that the tree is well-formed (see \code{\link[=default_validate_tree]{default_validate_tree()}}). It
+also calls a user-specified method to ensure that the id sets of the tree
+and data set are identical, and that data set elements corresponding to
+leaf vertices in the tree satisfy some user-specified predicate, e.g.,
+\code{is.numeric()}.
 }
 \details{
-The data set passed to \code{rollup()} can be any object for which an \code{update()}
-method can be written. A common and simple example is a data frame, but
+The data set passed to \code{rollup()} can be any object for which an
+\code{update()} method can be written. A common and simple example is a data
+frame, but lists work as well.
 }
 \examples{
 rollup(wbs_tree, wbs_table,

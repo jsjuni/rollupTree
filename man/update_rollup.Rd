@@ -7,21 +7,23 @@
 update_rollup(tree, ds, vertex, update)
 }
 \arguments{
-\item{tree}{An igraph directed graph that is a valid single-rooted in-tree}
+\item{tree}{\code{igraph} directed graph that is a valid single-rooted in-tree
+and whose vertex names are keys from the data set}
 
-\item{ds}{A data set to be updated; can be any object}
+\item{ds}{data set to be updated; can be any object}
 
 \item{vertex}{The start vertex}
 
-\item{update}{The update method called at each vertex as update(ds, parent_key, child_keys)}
+\item{update}{function called at each vertex as update(ds,
+parent_key, child_keys)}
 }
 \value{
-The updated data set.
+updated input data set
 }
 \description{
-update_rollup() performs a minimal update of a data set assuming a single leaf element property
+\code{update_rollup()} performs a minimal update of a data set assuming a single leaf element property
 has changed. It performs updates along the path from that vertex to the root. There should be no difference
-in the output from calling rollup() again. update_rollup() is perhaps more efficient and useful in an interactive context.
+in the output from calling \code{rollup()} again. \code{update_rollup()} is perhaps more efficient and useful in an interactive context.
 }
 \examples{
 update_rollup(wbs_tree, wbs_table, igraph::V(wbs_tree)["3.2"],

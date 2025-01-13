@@ -13,22 +13,23 @@ validate_ds(
 )
 }
 \arguments{
-\item{tree}{The tree to check against}
+\item{tree}{\code{igraph} directed graph that is a valid single-rooted in-tree
+and whose vertex names are keys from the data set}
 
-\item{ds}{The data set to validate}
+\item{ds}{data set to be updated; can be any object}
 
-\item{get_keys}{Method get keys of the data set called as get_keys(ds)}
+\item{get_keys}{function to get keys of the data set called as \code{get_keys(ds)}}
 
-\item{get_prop}{Method to get the property to validate for leaf element with id l, called as get_prop(ds, l)}
+\item{get_prop}{function to get the property value to validate for leaf element with id \code{l}, called as \code{get_prop(ds, l)}}
 
-\item{op}{Logical method to test return value of get_prop() (default \code{is.numeric()}); returns TRUE if OK}
+\item{op}{logical function to test return value of \code{get_prop()} (default \code{is.numeric()}); returns \code{TRUE} if OK}
 }
 \value{
 TRUE if validation succeeds, halts otherwise
 }
 \description{
 \code{validate_ds()} ensures that a data set contains the same identifiers as a specified tree and that
-elements of the data set corresponding to leaf verticies in the tree satisfy a user-specified predicate.
+elements of the data set corresponding to leaf vertices in the tree satisfy a user-specified predicate.
 }
 \examples{
 validate_ds(wbs_tree, wbs_table, function(d) d$id, function(d, l) d[d$id == l, "work"])

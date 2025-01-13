@@ -7,10 +7,11 @@
 default_validate_tree(tree)
 }
 \arguments{
-\item{tree}{An igraph directed graph to be validated}
+\item{tree}{\code{igraph} directed graph that is a valid single-rooted in-tree
+and whose vertex names are keys from the data set}
 }
 \value{
-single root element if tree is valid; stops otherwise
+single root vertex identifier if tree is valid; stops otherwise
 }
 \description{
 \code{default_validate_tree()} ensures that a tree is acyclic,
@@ -19,5 +20,4 @@ direction from child to parent.
 }
 \examples{
 default_validate_tree(wbs_tree)
-
 }
