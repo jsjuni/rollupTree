@@ -35,7 +35,7 @@ The computations in the example are worked out already; we show here how to repr
 
 A Work Breakdown Structure is a tree, that is, a graph that is connected and acyclic. It is, in addition, directed, that is, the edges have direction. We arbitrarily chose the edge direction to go from child to parent. Finally, it is single-rooted: every vertex but one has a single parent vertex; the root vertex has no parent.
 
-The leaf elements (vertices) of the tree require asserted values for the properties (work, budget) of interest. Property values for non-leaf elements are computed by the rollup operation.
+The leaf elements (vertices) of the tree require asserted values for the properties (work, budget) of interest. Property values for non-leaf elements are computed by `rollup()`.
 
 We begin by capturing the structure of the tree and asserted values in a data frame we call `wbs_table`. Values to be computed are initially unknown. Each element is uniquely identified by an `id` column[^1]. We also indicate parent id in the `pid` column but this information is not used directly by `rollup()`.
 
@@ -64,7 +64,7 @@ wbs_tree <- igraph::graph_from_edgelist(
 
 ## Summing a Single Numeric Property
 
-Although our data in this first example is a data frame, `rollup()` can operate on an arbitrary R object if provided with update and validate methods for that object. For the common case in which the parameter of interest is a numeric column in a data frame, the combine operation is addition, and the key column is named "id", the package provides `update_df_prop_by_id()` and `validate_df_by_id()` helper methods that can be invoked as boilerplate. To roll up the `work` property, for example, we simply invoke:
+Although our data in this first example is a data frame, `rollup()` can operate on an arbitrary R object if provided with *update* and *validate* methods for that object. For the common case in which the parameter of interest is a numeric column in a data frame, the combine operation is addition, and the key column is named `id`, the package provides `update_df_prop_by_id()` and `validate_df_by_id()` functions that can be invoked as boilerplate. To roll up the `work` property, for example, we simply invoke:
 
 ```{r}
 rollup(
@@ -75,7 +75,7 @@ rollup(
 )
 ```
 
-`update_df_prop_by_id()` (like every well-behaved update method) modifies only the specified column and leaves the rest of the data frame unchanged. If we want to roll up the `budget` column as well, we can simply chain two `rollup()`s together. In this example we use R's pipe operator:
+`update_df_prop_by_id()` (like every well-behaved *update* method) modifies only the specified column and leaves the rest of the data frame unchanged. If we want to roll up the `budget` column as well, we can simply chain two `rollup()`s together. In this example we use R's pipe operator:
 
 ```{r}
 rollup(
@@ -95,7 +95,7 @@ In most cases, this approach suffices. The code is simple and clear, and perform
 
 ## Chaining Update Methods
 
-A valid update method returns the updated data set, so we can chain two updates within a single `rollup()` instead of chaining two `rollup()`s. Similarly, a data set validator returns a logical value, so we can make the conjunction of two validators:
+A valid *update* method returns the updated data set, so we can chain two updates within a single `rollup()` instead of chaining two `rollup()`s. Similarly, a data set validator returns a logical value, so we can make the conjunction of two validators:
 
 ```{r}
 rollup(
@@ -121,7 +121,7 @@ rollup(
 
 ## Custom *get*, *set*, and *update* Methods
 
-In this example we create a custom *get* method that builds a named vector from the specified properties (using lower-level helper method `df_get_by_id()`) and a corresponding *set* method (using `df_set_by_id()`). We then create a custom *update* method using these methods. (The default *combine* method still works because R knows how to add vectors.) Finally, we create a custom data set validator and invoke `rollup()` with our custom methods.
+In this example we create a custom *get* method that builds a named vector from the specified properties (using lower-level function `df_get_by_id()`) and a corresponding *set* method (using `df_set_by_id()`). We then create a custom *update* method using these methods. (The default *combine* method still works because R knows how to add vectors.) Finally, we create a custom data set validator and invoke `rollup()` with our custom methods.
 
 ```{r}
 my_get <- function(d, i) c(
