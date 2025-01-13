@@ -92,7 +92,7 @@ to parent. Finally, it is single-rooted: every vertex but one has a
 single parent vertex; the root vertex has no parent.</p>
 <p>The leaf elements (vertices) of the tree require asserted values for
 the properties (work, budget) of interest. Property values for non-leaf
-elements are computed by the rollup operation.</p>
+elements are computed by <code><a href="../reference/rollup.html">rollup()</a></code>.</p>
 <p>We begin by capturing the structure of the tree and asserted values
 in a data frame we call <code>wbs_table</code>. Values to be computed
 are initially unknown. Each element is uniquely identified by an
@@ -152,13 +152,13 @@ our data frame:</p>
 </h3>
 <p>Although our data in this first example is a data frame,
 <code><a href="../reference/rollup.html">rollup()</a></code> can operate on an arbitrary R object if provided
-with update and validate methods for that object. For the common case in
-which the parameter of interest is a numeric column in a data frame, the
-combine operation is addition, and the key column is named “id”, the
-package provides <code><a href="../reference/update_df_prop_by_id.html">update_df_prop_by_id()</a></code> and
-<code><a href="../reference/validate_df_by_id.html">validate_df_by_id()</a></code> helper methods that can be invoked as
-boilerplate. To roll up the <code>work</code> property, for example, we
-simply invoke:</p>
+with <em>update</em> and <em>validate</em> methods for that object. For
+the common case in which the parameter of interest is a numeric column
+in a data frame, the combine operation is addition, and the key column
+is named <code>id</code>, the package provides
+<code><a href="../reference/update_df_prop_by_id.html">update_df_prop_by_id()</a></code> and <code><a href="../reference/validate_df_by_id.html">validate_df_by_id()</a></code>
+functions that can be invoked as boilerplate. To roll up the
+<code>work</code> property, for example, we simply invoke:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rollup.html">rollup</a></span><span class="op">(</span></span>
 <span>  tree<span class="op">=</span><span class="va">wbs_tree</span>,</span>
@@ -177,11 +177,12 @@ simply invoke:</p>
 <span><span class="co">#&gt; 8  2.2    2          Steel Erection   5.8   9000</span></span>
 <span><span class="co">#&gt; 9  3.1    3            Masonry Work  16.2  62000</span></span>
 <span><span class="co">#&gt; 10 3.2    3       Building Finishes  14.2  21500</span></span></code></pre></div>
-<p><code><a href="../reference/update_df_prop_by_id.html">update_df_prop_by_id()</a></code> (like every well-behaved update
-method) modifies only the specified column and leaves the rest of the
-data frame unchanged. If we want to roll up the <code>budget</code>
-column as well, we can simply chain two <code><a href="../reference/rollup.html">rollup()</a></code>s together.
-In this example we use R’s pipe operator:</p>
+<p><code><a href="../reference/update_df_prop_by_id.html">update_df_prop_by_id()</a></code> (like every well-behaved
+<em>update</em> method) modifies only the specified column and leaves
+the rest of the data frame unchanged. If we want to roll up the
+<code>budget</code> column as well, we can simply chain two
+<code><a href="../reference/rollup.html">rollup()</a></code>s together. In this example we use R’s pipe
+operator:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rollup.html">rollup</a></span><span class="op">(</span></span>
 <span>  tree<span class="op">=</span><span class="va">wbs_tree</span>,</span>
@@ -215,10 +216,11 @@ more esoteric applications.</p>
 <div class="section level3">
 <h3 id="chaining-update-methods">Chaining Update Methods<a class="anchor" aria-label="anchor" href="#chaining-update-methods"></a>
 </h3>
-<p>A valid update method returns the updated data set, so we can chain
-two updates within a single <code><a href="../reference/rollup.html">rollup()</a></code> instead of chaining
-two <code><a href="../reference/rollup.html">rollup()</a></code>s. Similarly, a data set validator returns a
-logical value, so we can make the conjunction of two validators:</p>
+<p>A valid <em>update</em> method returns the updated data set, so we
+can chain two updates within a single <code><a href="../reference/rollup.html">rollup()</a></code> instead of
+chaining two <code><a href="../reference/rollup.html">rollup()</a></code>s. Similarly, a data set validator
+returns a logical value, so we can make the conjunction of two
+validators:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rollup.html">rollup</a></span><span class="op">(</span></span>
 <span>  tree <span class="op">=</span> <span class="va">wbs_tree</span>,</span>
@@ -255,9 +257,9 @@ logical value, so we can make the conjunction of two validators:</p>
 <h3 id="custom-get-set-and-update-methods">Custom <em>get</em>, <em>set</em>, and <em>update</em> Methods<a class="anchor" aria-label="anchor" href="#custom-get-set-and-update-methods"></a>
 </h3>
 <p>In this example we create a custom <em>get</em> method that builds a
-named vector from the specified properties (using lower-level helper
-method <code><a href="../reference/df_get_by_id.html">df_get_by_id()</a></code>) and a corresponding <em>set</em>
-method (using <code><a href="../reference/df_set_by_id.html">df_set_by_id()</a></code>). We then create a custom
+named vector from the specified properties (using lower-level function
+<code><a href="../reference/df_get_by_id.html">df_get_by_id()</a></code>) and a corresponding <em>set</em> method
+(using <code><a href="../reference/df_set_by_id.html">df_set_by_id()</a></code>). We then create a custom
 <em>update</em> method using these methods. (The default
 <em>combine</em> method still works because R knows how to add vectors.)
 Finally, we create a custom data set validator and invoke
