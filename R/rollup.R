@@ -46,11 +46,11 @@
 #' )
 #'
 rollup <- function(tree, ds, update, validate_ds, validate_tree = default_validate_tree) {
-  root <- validate_tree(tree)
+  validate_tree(tree)
   validate_ds(tree, ds)
   Reduce(
-    f = function(s, v) update(s, names(igraph::V(tree))[v], names(igraph::neighbors(tree, v, "in"))),
-    x = igraph::dfs(tree, root, mode="in", order=FALSE, order.out=TRUE)$order.out,
+    f = function(s, v) update(s, names(igraph::V(tree)[v]), names(igraph::neighbors(tree, v, "in"))),
+    x = igraph::topo_sort(tree, mode="out"),
     init = ds
   )
 }
@@ -80,9 +80,11 @@ rollup <- function(tree, ds, update, validate_ds, validate_tree = default_valida
 #'
 update_rollup <- function(tree, ds, vertex, update) {
   if (igraph::degree(tree, vertex, mode="in") > 0) stop("update_rollup on non-leaf")
+  vertices_above <- igraph::subcomponent(tree, vertex, mode = "out")[-1]
+  subtree <- igraph::subgraph(tree, vertices_above)
   Reduce(
-    f = function(s, v) update(s, names(igraph::V(tree))[v], names(igraph::neighbors(tree, v, "in"))),
-    x = igraph::dfs(tree, vertex, mode="out", unreachable=FALSE, order=TRUE)$order,
+    f = function(s, v) update(s, v, names(igraph::neighbors(tree, igraph::V(tree)[v], "in"))),
+    x = names(igraph::topo_sort(subtree, mode = "out")),
     init = ds
   )
 }

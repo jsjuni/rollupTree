@@ -1,6 +1,7 @@
 ---
 title: "rollupTree"
 output: rmarkdown::html_vignette
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{rollupTree}
   %\VignetteEngine{knitr::rmarkdown}
@@ -46,13 +47,13 @@ library(rollupTree)
 wbs_table
 ```
 
-A key feature of recursively-defined problems like this is that the computations must be ordered in such a way that the computations for a given element must occur after properties for it children are known (either asserted or computed). Traversing a tree in this manner is a well-known algorithm in graph theory known as *depth-first (postorder) search*. For that reason, we construct a graph object in R, from which we can conveniently (1) check that the graph is in fact a well-formed tree, and (2) efficiently execute a depth-first search to order the computations. (Note that, although the problems solved by rollup are *defined* recursively, the implementation in software is not recursive.)
+A key feature of recursively-defined problems like this is that the computations must be ordered in such a way that the computations for a given element must occur after properties for it children are known (either asserted or computed). Traversing a tree in this manner can be achieved by using a well-known algorithm in graph theory known as *topological sort*. For that reason, we construct an `igraph` [@igraph_manual] graph object in R, from which we can conveniently (1) check that the graph is in fact a well-formed tree, and (2) efficiently execute a topological sort to order the computations. (Note that, although the problems solved by rollup are *defined* recursively, the implementation in software is not recursive.)
 
 It is a simple matter to construct a graph from the information in our data frame:
 
 ```{r wbs_tree-plot}
 library(igraph)
-wbs_tree <- igraph::graph_from_edgelist(
+wbs_tree <- graph_from_edgelist(
   as.matrix(wbs_table[which(!is.na(wbs_table$pid)), c("id", "pid")]),
   directed = TRUE
 )
@@ -257,3 +258,5 @@ ob <- vertex_attr(tree_result, "budget")
 names(ob) <- names(V(tree_result))
 ob
 ```
+
+# References
