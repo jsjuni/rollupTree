@@ -21,6 +21,10 @@ methods as required.
 
 ## Installation
 
+``` r
+install.packages("rollupTree")
+```
+
 You can install the development version of `rollupTree` from
 [GitHub](https://github.com/) with:
 
