@@ -20,7 +20,7 @@
 #'   `is.numeric()`.
 #'
 #' @details The data set passed to `rollup()` can be any object for which an
-#'   `update()` method can be written. A common and simple example is a data
+#'   update function can be written. A common and simple example is a data
 #'   frame, but lists work as well.
 #'
 #' @param tree `igraph` directed graph that is a valid single-rooted in-tree

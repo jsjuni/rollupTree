@@ -44,7 +44,7 @@ leaf vertices in the tree satisfy some user-specified predicate, e.g.,
 }
 \details{
 The data set passed to \code{rollup()} can be any object for which an
-\code{update()} method can be written. A common and simple example is a data
+update function can be written. A common and simple example is a data
 frame, but lists work as well.
 }
 \examples{
