@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Perform Recursive Computations">
-<meta name="description" content="Mass rollup for a Bill of Materials is an example of a class of computations in which elements are arranged in a tree structure and some property of each element is a computed function of the corresponding values of its child elements. Leaf elements, i.e., those with no children, have values assigned. In many cases, the combining function is simple arithmetic sum; in other cases (e.g., mass properties), the combiner may involve other information such as the geometric relationship between parent and child, or statistical relations such as root-sum-of-squares (RSS). This package implements a general function for such problems. It is adapted to specific recursive computations by functional programming techniques; the caller passes a function as the update parameter to rollup() (or, at a lower level, as the get, set, combine, and override parameters of update_prop()) at runtime to specify the desired operations. The implementation relies on graph-theoretic algorithms (particulary topological sort) from the igraph package of Csárdi, et al. (2006 &lt;doi:10.5281/zenodo.7682609&gt;).">
-<meta property="og:description" content="Mass rollup for a Bill of Materials is an example of a class of computations in which elements are arranged in a tree structure and some property of each element is a computed function of the corresponding values of its child elements. Leaf elements, i.e., those with no children, have values assigned. In many cases, the combining function is simple arithmetic sum; in other cases (e.g., mass properties), the combiner may involve other information such as the geometric relationship between parent and child, or statistical relations such as root-sum-of-squares (RSS). This package implements a general function for such problems. It is adapted to specific recursive computations by functional programming techniques; the caller passes a function as the update parameter to rollup() (or, at a lower level, as the get, set, combine, and override parameters of update_prop()) at runtime to specify the desired operations. The implementation relies on graph-theoretic algorithms (particulary topological sort) from the igraph package of Csárdi, et al. (2006 &lt;doi:10.5281/zenodo.7682609&gt;).">
+<meta name="description" content="Mass rollup for a Bill of Materials is an example of a class of computations in which elements are arranged in a tree structure and some property of each element is a computed function of the corresponding values of its child elements. Leaf elements, i.e., those with no children, have values assigned. In many cases, the combining function is simple arithmetic sum; in other cases (e.g., mass properties), the combiner may involve other information such as the geometric relationship between parent and child, or statistical relations such as root-sum-of-squares (RSS). This package implements a general function for such problems. It is adapted to specific recursive computations by functional programming techniques; the caller passes a function as the update parameter to rollup() (or, at a lower level, as the get, set, combine, and override parameters of update_prop()) at runtime to specify the desired operations. The implementation relies on graph-theoretic algorithms from the igraph package of Csárdi, et al. (2006 &lt;doi:10.5281/zenodo.7682609&gt;).">
+<meta property="og:description" content="Mass rollup for a Bill of Materials is an example of a class of computations in which elements are arranged in a tree structure and some property of each element is a computed function of the corresponding values of its child elements. Leaf elements, i.e., those with no children, have values assigned. In many cases, the combining function is simple arithmetic sum; in other cases (e.g., mass properties), the combiner may involve other information such as the geometric relationship between parent and child, or statistical relations such as root-sum-of-squares (RSS). This package implements a general function for such problems. It is adapted to specific recursive computations by functional programming techniques; the caller passes a function as the update parameter to rollup() (or, at a lower level, as the get, set, combine, and override parameters of update_prop()) at runtime to specify the desired operations. The implementation relies on graph-theoretic algorithms from the igraph package of Csárdi, et al. (2006 &lt;doi:10.5281/zenodo.7682609&gt;).">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -63,6 +63,50 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"jsjuni/rollupTree"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>Suppose we have this data frame representing a work breakdown structure:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jsjuni.github.io/rollupTree/">rollupTree</a></span><span class="op">)</span></span>
+<span><span class="va">wbs_table</span></span>
+<span><span class="co">#&gt;     id  pid                    name budget</span></span>
+<span><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House     NA</span></span>
+<span><span class="co">#&gt; 2    1  top                Internal     NA</span></span>
+<span><span class="co">#&gt; 3    2  top              Foundation     NA</span></span>
+<span><span class="co">#&gt; 4    3  top                External     NA</span></span>
+<span><span class="co">#&gt; 5  1.1    1              Electrical  25000</span></span>
+<span><span class="co">#&gt; 6  1.2    1                Plumbing  61000</span></span>
+<span><span class="co">#&gt; 7  2.1    2                Excavate  37000</span></span>
+<span><span class="co">#&gt; 8  2.2    2          Steel Erection   9000</span></span>
+<span><span class="co">#&gt; 9  3.1    3            Masonry Work  62000</span></span>
+<span><span class="co">#&gt; 10 3.2    3       Building Finishes  21500</span></span></code></pre></div>
+<p>and this tree with edges representing child-parent relations in the breakdown:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/E.html" class="external-link">E</a></span><span class="op">(</span><span class="va">wbs_tree</span><span class="op">)</span></span>
+<span><span class="co">#&gt; + 9/9 edges from dd17ef5 (vertex names):</span></span>
+<span><span class="co">#&gt; [1] 1  -&gt;top 2  -&gt;top 3  -&gt;top 1.1-&gt;1   1.2-&gt;1   2.1-&gt;2   2.2-&gt;2   3.1-&gt;3  </span></span>
+<span><span class="co">#&gt; [9] 3.2-&gt;3</span></span></code></pre></div>
+<p>We can sum the budget numbers as follows:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/rollup.html">rollup</a></span><span class="op">(</span></span>
+<span>  tree<span class="op">=</span><span class="va">wbs_tree</span>,</span>
+<span>  ds<span class="op">=</span><span class="va">wbs_table</span>,</span>
+<span>  update<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">t</span>, <span class="va">s</span><span class="op">)</span> <span class="fu"><a href="reference/update_df_prop_by_id.html">update_df_prop_by_id</a></span><span class="op">(</span>df<span class="op">=</span><span class="va">d</span>, target<span class="op">=</span><span class="va">t</span>, sources<span class="op">=</span><span class="va">s</span>, prop<span class="op">=</span><span class="st">"budget"</span><span class="op">)</span>,</span>
+<span>  validate_ds<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">t</span>, <span class="va">d</span><span class="op">)</span> <span class="fu"><a href="reference/validate_df_by_id.html">validate_df_by_id</a></span><span class="op">(</span>tree<span class="op">=</span><span class="va">t</span>, df<span class="op">=</span><span class="va">d</span>, prop<span class="op">=</span><span class="st">"budget"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;     id  pid                    name budget</span></span>
+<span><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 215500</span></span>
+<span><span class="co">#&gt; 2    1  top                Internal  86000</span></span>
+<span><span class="co">#&gt; 3    2  top              Foundation  46000</span></span>
+<span><span class="co">#&gt; 4    3  top                External  83500</span></span>
+<span><span class="co">#&gt; 5  1.1    1              Electrical  25000</span></span>
+<span><span class="co">#&gt; 6  1.2    1                Plumbing  61000</span></span>
+<span><span class="co">#&gt; 7  2.1    2                Excavate  37000</span></span>
+<span><span class="co">#&gt; 8  2.2    2          Steel Erection   9000</span></span>
+<span><span class="co">#&gt; 9  3.1    3            Masonry Work  62000</span></span>
+<span><span class="co">#&gt; 10 3.2    3       Building Finishes  21500</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
