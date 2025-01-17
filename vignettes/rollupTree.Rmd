@@ -61,6 +61,12 @@ wbs_tree <- graph_from_edgelist(
 
 ## ![WBS Tree](wbs_tree.png)
 
+A directed acyclic graph may have more than one topological sort; any is suitable for our purpose. Here is what `rollup()` uses internally:
+
+```{r}
+igraph::topo_sort(wbs_tree)
+```
+
 <!--# plot created by coords <- layout_(wbs_tree, as_tree(mode="in")) plot(wbs_tree, layout=coords, vertex.size = 30) -->
 
 ## Summing a Single Numeric Property
