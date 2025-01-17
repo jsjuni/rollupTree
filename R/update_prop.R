@@ -194,7 +194,7 @@ update_df_prop_by_id <- function(df, target, sources, prop, ...) {
   )
 }
 
-#' Validate a dataframe For rollup
+#' Validate a dataframe For rollup()
 #'
 #' @description
 #' `validate_df_by_key()` is a convenience wrapper for `validate_ds()` for the common case in which the
@@ -215,7 +215,7 @@ validate_df_by_key <- function(tree, df, key, prop, ...) {
   validate_ds(tree, df, function(d) df_get_keys(d, key), function(d, r) df_get_by_key(d, key, r, prop), ...)
 }
 
-#' Validate a dataframe with key "id" for rollup
+#' Validate a dataframe with key "id" for `rollup()`
 #'
 #' @description
 #' `validate_df_by_id()` is a convenience wrapper for `validate_ds()` for the common case in which the

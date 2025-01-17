@@ -36,3 +36,32 @@ You can install the development version of rollupTree from [GitHub](https://gith
 pak::pak("jsjuni/rollupTree")
 ```
 
+## Example
+
+Suppose we have this data frame representing a work breakdown structure:
+
+```{r echo = FALSE}
+library(rollupTree)
+wbs_table$work <- NULL
+```
+```{r}
+library(rollupTree)
+wbs_table
+```
+
+and this tree with edges representing child-parent relations in the breakdown:
+
+```{r}
+igraph::E(wbs_tree)
+```
+We can sum the budget numbers as follows:
+
+```{r}
+rollup(
+  tree=wbs_tree,
+  ds=wbs_table,
+  update=function(d, t, s) update_df_prop_by_id(df=d, target=t, sources=s, prop="budget"),
+  validate_ds=function(t, d) validate_df_by_id(tree=t, df=d, prop="budget")
+)
+```
+
