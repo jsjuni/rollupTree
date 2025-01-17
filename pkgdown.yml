@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   rollupTree: rollupTree.html
-last_built: 2025-01-17T13:08Z
+last_built: 2025-01-17T13:11Z
 urls:
   reference: https://jsjuni.github.io/rollupTree/reference
   article: https://jsjuni.github.io/rollupTree/articles

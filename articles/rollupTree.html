@@ -146,6 +146,13 @@ our data frame:</p>
 <h3 id="wbs-tree">
 <img src="wbs_tree.png" alt="WBS Tree"><a class="anchor" aria-label="anchor" href="#wbs-tree"></a>
 </h3>
+<p>A directed acyclic graph may have more than one topological sort; any
+is suitable for our purpose. Here is what <code><a href="../reference/rollup.html">rollup()</a></code> uses
+internally:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/topo_sort.html" class="external-link">topo_sort</a></span><span class="op">(</span><span class="va">wbs_tree</span><span class="op">)</span></span>
+<span><span class="co">#&gt; + 10/10 vertices, named, from 86a1d7e:</span></span>
+<span><span class="co">#&gt;  [1] 1.1 1.2 2.1 2.2 3.1 3.2 1   2   3   top</span></span></code></pre></div>
 <!--# plot created by coords <- layout_(wbs_tree, as_tree(mode="in")) plot(wbs_tree, layout=coords, vertex.size = 30) -->
 </div>
 <div class="section level3">
@@ -160,7 +167,7 @@ is named <code>id</code>, the package provides
 <code><a href="../reference/update_df_prop_by_id.html">update_df_prop_by_id()</a></code> and <code><a href="../reference/validate_df_by_id.html">validate_df_by_id()</a></code>
 functions that can be invoked as boilerplate. To roll up the
 <code>work</code> property, for example, we simply invoke:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rollup.html">rollup</a></span><span class="op">(</span></span>
 <span>  tree<span class="op">=</span><span class="va">wbs_tree</span>,</span>
 <span>  ds<span class="op">=</span><span class="va">wbs_table</span>,</span>
@@ -184,7 +191,7 @@ the rest of the data frame unchanged. If we want to roll up the
 <code>budget</code> column as well, we can simply chain two
 <code><a href="../reference/rollup.html">rollup()</a></code>s together. In this example we use R’s pipe
 operator:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rollup.html">rollup</a></span><span class="op">(</span></span>
 <span>  tree<span class="op">=</span><span class="va">wbs_tree</span>,</span>
 <span>  ds<span class="op">=</span><span class="va">wbs_table</span>,</span>
@@ -222,7 +229,7 @@ can chain two updates within a single <code><a href="../reference/rollup.html">r
 chaining two <code><a href="../reference/rollup.html">rollup()</a></code>s. Similarly, a data set validator
 returns a logical value, so we can make the conjunction of two
 validators:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/rollup.html">rollup</a></span><span class="op">(</span></span>
 <span>  tree <span class="op">=</span> <span class="va">wbs_tree</span>,</span>
 <span>  ds <span class="op">=</span> <span class="va">wbs_table</span>,</span>
@@ -265,7 +272,7 @@ named vector from the specified properties (using lower-level function
 <em>combine</em> method still works because R knows how to add vectors.)
 Finally, we create a custom data set validator and invoke
 <code><a href="../reference/rollup.html">rollup()</a></code> with our custom methods.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_get</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">i</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  w<span class="op">=</span><span class="fu"><a href="../reference/df_get_by_id.html">df_get_by_id</a></span><span class="op">(</span>df<span class="op">=</span><span class="va">d</span>, id<span class="op">=</span><span class="va">i</span>, prop<span class="op">=</span><span class="st">"work"</span><span class="op">)</span>,</span>
 <span>  b<span class="op">=</span><span class="fu"><a href="../reference/df_get_by_id.html">df_get_by_id</a></span><span class="op">(</span>df<span class="op">=</span><span class="va">d</span>, id<span class="op">=</span><span class="va">i</span>, prop<span class="op">=</span><span class="st">"budget"</span><span class="op">)</span></span>
@@ -311,7 +318,7 @@ Finally, we create a custom data set validator and invoke
 <p>Finally, we illustrate the use of a custom combiner. Suppose we have
 5% uncertainty in our leaf cost numbers. Add those uncertainty numbers
 to our data frame:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_wbs_table</span> <span class="op">&lt;-</span> <span class="va">wbs_table</span></span>
 <span><span class="va">new_wbs_table</span><span class="op">$</span><span class="va">work</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span><span class="va">new_wbs_table</span><span class="op">$</span><span class="va">budget_unc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">wbs_table</span><span class="op">$</span><span class="va">budget</span><span class="op">)</span>, <span class="cn">NA</span>, <span class="va">wbs_table</span><span class="op">$</span><span class="va">budget</span> <span class="op">*</span> <span class="fl">0.05</span><span class="op">)</span></span>
@@ -329,7 +336,7 @@ to our data frame:</p>
 <span><span class="co">#&gt; 10 3.2    3       Building Finishes  21500       1075</span></span></code></pre></div>
 <p>The standard technique for accumulating uncertainties is to combine
 using root-sum-square (RSS).</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">combine_rss</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">vl</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span>f <span class="op">=</span> <span class="va">`+`</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Map</a></span><span class="op">(</span></span>
 <span>    f <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">v</span><span class="op">)</span></span>
@@ -375,7 +382,7 @@ using root-sum-square (RSS).</p>
 <h2 id="example-with-a-list">Example With A List<a class="anchor" aria-label="anchor" href="#example-with-a-list"></a>
 </h2>
 <p>Suppose instead of a data frame we have a list of lists:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wbs_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">wbs_table</span>, <span class="va">wbs_table</span><span class="op">$</span><span class="va">id</span><span class="op">)</span>,</span>
 <span>                   <span class="kw">function</span><span class="op">(</span><span class="va">r</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="va">r</span><span class="op">$</span><span class="va">name</span>, budget <span class="op">=</span> <span class="va">r</span><span class="op">$</span><span class="va">budget</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -413,13 +420,13 @@ using root-sum-square (RSS).</p>
 <span><span class="co">#&gt;   ..$ budget: num NA</span></span></code></pre></div>
 <p>We construct <em>update</em> and <em>validate</em> functions as
 follows:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_get</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">i</span><span class="op">)</span> <span class="va">d</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">budget</span></span>
 <span><span class="va">list_set</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">i</span>, <span class="va">v</span><span class="op">)</span> <span class="op">{</span> <span class="va">d</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">budget</span> <span class="op">=</span> <span class="va">v</span>; <span class="va">d</span> <span class="op">}</span></span>
 <span><span class="va">list_update</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">t</span>, <span class="va">s</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="../reference/update_prop.html">update_prop</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">t</span>, <span class="va">s</span>, <span class="va">list_set</span>, <span class="va">list_get</span><span class="op">)</span> <span class="op">}</span></span>
 <span><span class="va">list_validate</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">t</span>, <span class="va">d</span><span class="op">)</span> <span class="fu"><a href="../reference/validate_ds.html">validate_ds</a></span><span class="op">(</span><span class="va">t</span>, <span class="va">d</span>, get_keys <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">l</span><span class="op">)</span>, get <span class="op">=</span> <span class="va">list_get</span><span class="op">)</span></span></code></pre></div>
 <p>The output of <code><a href="../reference/rollup.html">rollup()</a></code> is as expected:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">list_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rollup.html">rollup</a></span><span class="op">(</span><span class="va">wbs_tree</span>, <span class="va">wbs_list</span>, <span class="va">list_update</span>, <span class="va">list_validate</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">list_result</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 10</span></span>
@@ -460,7 +467,7 @@ follows:</p>
 <p>The tree can serve as the dataset with proper attributes and methods.
 To illustrate, we add the budget figures from our data frame as vertex
 attributes to the tree:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_wbs_tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span></span>
 <span>  f <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">g</span>, <span class="va">k</span><span class="op">)</span> <span class="fu"><a href="https://r.igraph.org/reference/set_vertex_attr.html" class="external-link">set_vertex_attr</a></span><span class="op">(</span><span class="va">g</span>, <span class="st">'budget'</span>, <span class="va">k</span>, <span class="fu"><a href="../reference/df_get_by_id.html">df_get_by_id</a></span><span class="op">(</span><span class="va">wbs_table</span>, <span class="va">k</span>, <span class="st">'budget'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">wbs_tree</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -473,13 +480,13 @@ attributes to the tree:</p>
 <span><span class="co">#&gt;    NA    NA    NA    NA 25000 61000 37000  9000 62000 21500</span></span></code></pre></div>
 <p>We construct <em>update</em> and <em>validate</em> functions as
 follows:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tree_get</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">k</span><span class="op">)</span> <span class="fu"><a href="https://r.igraph.org/reference/vertex_attr.html" class="external-link">vertex_attr</a></span><span class="op">(</span><span class="va">d</span>, <span class="st">"budget"</span>, <span class="va">k</span><span class="op">)</span></span>
 <span><span class="va">tree_set</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">k</span>, <span class="va">v</span><span class="op">)</span> <span class="fu"><a href="https://r.igraph.org/reference/set_vertex_attr.html" class="external-link">set_vertex_attr</a></span><span class="op">(</span><span class="va">d</span>, <span class="st">"budget"</span>, <span class="va">k</span>, <span class="va">v</span><span class="op">)</span></span>
 <span><span class="va">tree_update</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">t</span>, <span class="va">s</span><span class="op">)</span> <span class="fu"><a href="../reference/update_prop.html">update_prop</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">t</span>, <span class="va">s</span>, set <span class="op">=</span> <span class="va">tree_set</span>, get <span class="op">=</span> <span class="va">tree_get</span><span class="op">)</span></span>
 <span><span class="va">tree_validate</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">t</span>, <span class="va">d</span><span class="op">)</span> <span class="fu"><a href="../reference/validate_ds.html">validate_ds</a></span><span class="op">(</span><span class="va">t</span>, <span class="va">d</span>, get_keys <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, get <span class="op">=</span> <span class="va">tree_get</span><span class="op">)</span></span></code></pre></div>
 <p>The output of <code><a href="../reference/rollup.html">rollup()</a></code> is as expected:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tree_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rollup.html">rollup</a></span><span class="op">(</span><span class="va">new_wbs_tree</span>, <span class="va">new_wbs_tree</span>, update <span class="op">=</span> <span class="va">tree_update</span>, validate_ds <span class="op">=</span> <span class="va">tree_validate</span><span class="op">)</span></span>
 <span><span class="va">ob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/vertex_attr.html" class="external-link">vertex_attr</a></span><span class="op">(</span><span class="va">tree_result</span>, <span class="st">"budget"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ob</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">tree_result</span><span class="op">)</span><span class="op">)</span></span>
