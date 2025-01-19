@@ -7,22 +7,22 @@
 update_df_prop_by_id(df, target, sources, prop, ...)
 }
 \arguments{
-\item{df}{A data frame}
+\item{df}{a data frame}
 
-\item{target}{Key of data set element to be updated}
+\item{target}{key of data set element to be updated}
 
-\item{sources}{Keys of data set elements to be combined}
+\item{sources}{keys of data set elements to be combined}
 
-\item{prop}{Column name of the property}
+\item{prop}{column name of the property}
 
-\item{...}{Other arguments passed to \code{update_prop()}}
+\item{...}{other arguments passed to \code{update_prop()}}
 }
 \value{
 The updated dataframe
 }
 \description{
 \code{update_df_prop_by_id()} is a convenience wrapper around \code{update_prop()}
-for the common case in which the data set is a dataframe whose key column
+for the common case in which the data set is a data frame whose key column
 is named "id"
 }
 \examples{

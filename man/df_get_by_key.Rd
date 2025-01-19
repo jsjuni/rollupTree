@@ -7,13 +7,13 @@
 df_get_by_key(df, key, keyval, prop)
 }
 \arguments{
-\item{df}{A data frame}
+\item{df}{a data frame}
 
-\item{key}{Name of the column used as key}
+\item{key}{name of the column used as key}
 
-\item{keyval}{Value of the key for the specified row}
+\item{keyval}{value of the key for the specified row}
 
-\item{prop}{Column name of the property value to get}
+\item{prop}{column name of the property value to get}
 }
 \value{
 The requested value

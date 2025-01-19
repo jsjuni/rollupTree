@@ -7,16 +7,16 @@
 df_set_by_id(df, idval, prop, val)
 }
 \arguments{
-\item{df}{A data frame}
+\item{df}{a data frame}
 
-\item{idval}{ID Value for the specified row}
+\item{idval}{id value for the specified row}
 
-\item{prop}{Column name of the property value to get}
+\item{prop}{column name of the property value to get}
 
-\item{val}{Value to set}
+\item{val}{value to set}
 }
 \value{
-The updated data frame
+updated data frame
 }
 \description{
 Set property by key "id" in data frame

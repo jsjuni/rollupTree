@@ -7,15 +7,15 @@
 validate_df_by_key(tree, df, key, prop, ...)
 }
 \arguments{
-\item{tree}{The tree to validate against}
+\item{tree}{tree to validate against}
 
-\item{df}{A datafame}
+\item{df}{data frame}
 
-\item{key}{Name of the column serving as key}
+\item{key}{name of the column serving as key}
 
-\item{prop}{Property whose value is checked (leaf elements only)}
+\item{prop}{property whose value is checked (leaf elements only)}
 
-\item{...}{Other parameters passed to validate_ds()}
+\item{...}{other parameters passed to validate_ds()}
 }
 \value{
 TRUE if validation succeeds, halts otherwise

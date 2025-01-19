@@ -9,17 +9,18 @@
 #'
 #' The `override` argument can be used to selectively override the
 #' computed value based on the target element. By default, it simply
-#' returns the value computed by `combine`.
+#' returns the value computed by the combiner.
 #'
-#' @param ds Data set to be updated
-#' @param target Key of data set element to be updated
-#' @param sources Keys of data set elements to be combined
-#' @param set Method to set properties for a target element
-#' @param get Method to get properties for source elements
-#' @param combine Method to combine properties
-#' @param override Method to selectively override combine() results
+#' @param ds data set to be updated
+#' @param target key of data set element to be updated
+#' @param sources keys of data set elements to be combined
+#' @param set function to set properties for a target element
+#' @param get function to get properties for source elements
+#' @param combine function to combine properties
+#' @param override function to selectively override combined results
+#' @param ... additional arguments passed to the combiner
 #'
-#' @return Updated data set
+#' @return updated data set
 #' @export
 #'
 #' @examples
@@ -34,10 +35,11 @@
 #' )
 update_prop <- function(ds, target, sources, set, get,
                         combine = function(l) Reduce('+', l),
-                        override = function(ds, target, v) v) {
+                        override = function(ds, target, v) v,
+                        ...) {
   if (length(sources) > 0) {
     av <- Map(f = function(s) get(ds, s), sources)
-    set(ds, target, override(ds, target, combine(av)))
+    set(ds, target, override(ds, target, combine(av, ...)))
   } else
     ds
 }
@@ -49,8 +51,8 @@ update_prop <- function(ds, target, sources, set, get,
 #' @description
 #' `df_get_keys` gets all values from a designated column in a data frame.
 #'
-#' @param df A data frame
-#' @param key Name of the column used as key
+#' @param df a data frame
+#' @param key name of the column used as key
 #'
 #' @return All values of the key column
 #' @export
@@ -65,9 +67,9 @@ df_get_keys <- function(df, key) df[, key]
 #' The default name for a key column in `rollup` is `id`. `df_get_ids` gets all values
 #' from the `id` column in a data frame.
 #'
-#' @param df A data frame
+#' @param df a data frame
 #'
-#' @return All values of the `id` column
+#' @return all values of the `id` column
 #' @export
 #'
 #' @examples
@@ -80,10 +82,10 @@ df_get_ids <- function(df) df_get_keys(df, "id")
 #' `df_get_by_key` returns the value of specified property (column) in a specified row
 #' of a data frame. The row is specified by a key column and a value from that column.
 #'
-#' @param df A data frame
-#' @param key Name of the column used as key
-#' @param keyval Value of the key for the specified row
-#' @param prop Column name of the property value to get
+#' @param df a data frame
+#' @param key name of the column used as key
+#' @param keyval value of the key for the specified row
+#' @param prop column name of the property value to get
 #'
 #' @return The requested value
 #' @export
@@ -98,9 +100,9 @@ df_get_by_key <- function(df, key, keyval, prop) df[df[, key] == keyval, prop]
 #' `df_get_by_id` returns the value of specified property (column) in a specified row
 #' of a data frame. The row is specified by a value for the `id` column.
 #'
-#' @param df A data frame
-#' @param idval ID of the row to get
-#' @param prop Name of the column to get
+#' @param df a data frame
+#' @param idval id of the row to get
+#' @param prop name of the column to get
 #'
 #' @return The requested value
 #' @export
@@ -111,11 +113,11 @@ df_get_by_id <- function(df, idval, prop) df[df[, "id"] == idval, prop]
 
 #' Set property by key in data frame
 #'
-#' @param df A data frame
-#' @param key Name of the column used as key
-#' @param keyval Value of the key for the specified row
-#' @param prop Column name of the property value to get
-#' @param val Value to set
+#' @param df a data frame
+#' @param key name of the column used as key
+#' @param keyval value of the key for the specified row
+#' @param prop column name of the property value to get
+#' @param val value to set
 #'
 #' @return The updated data frame
 #' @export
@@ -129,12 +131,12 @@ df_set_by_key <- function(df, key, keyval, prop, val) {
 
 #' Set property by key "id" in data frame
 #'
-#' @param df A data frame
-#' @param idval ID Value for the specified row
-#' @param prop Column name of the property value to get
-#' @param val Value to set
+#' @param df a data frame
+#' @param idval id value for the specified row
+#' @param prop column name of the property value to get
+#' @param val value to set
 #'
-#' @return The updated data frame
+#' @return updated data frame
 #' @export
 #'
 #' @examples
@@ -147,16 +149,16 @@ df_set_by_id <- function(df, idval, prop, val) {
 #' Update a property in a dataframe
 #'
 #' `update_df_prop_by_key()` is a convenience wrapper around `update_prop()`
-#' for the common case in which the data set is a dataframe.
+#' for the common case in which the data set is a data frame.
 #'
-#' @param df A data frame
-#' @param key Name of the column serving as key
-#' @param target Key of data set element to be updated
-#' @param sources Keys of data set elements to be combined
-#' @param prop Column name of the property
-#' @param ... Other arguments passed to `update_prop()`
+#' @param df a data frame
+#' @param key name of the column serving as key
+#' @param target key of data set element to be updated
+#' @param sources keys of data set elements to be combined
+#' @param prop column name of the property
+#' @param ... other arguments passed to `update_prop()`
 #'
-#' @return The updated dataframe
+#' @return The updated data frame
 #' @export
 #'
 #' @examples
@@ -172,14 +174,14 @@ update_df_prop_by_key <- function(df, key, target, sources, prop, ...) {
 #' Update a property in a dataframe with key "id"
 #'
 #' `update_df_prop_by_id()` is a convenience wrapper around `update_prop()`
-#' for the common case in which the data set is a dataframe whose key column
+#' for the common case in which the data set is a data frame whose key column
 #' is named "id"
 #'
-#' @param df A data frame
-#' @param target Key of data set element to be updated
-#' @param sources Keys of data set elements to be combined
-#' @param prop Column name of the property
-#' @param ... Other arguments passed to `update_prop()`
+#' @param df a data frame
+#' @param target key of data set element to be updated
+#' @param sources keys of data set elements to be combined
+#' @param prop column name of the property
+#' @param ... other arguments passed to `update_prop()`
 #'
 #' @return The updated dataframe
 #' @export
@@ -200,11 +202,11 @@ update_df_prop_by_id <- function(df, target, sources, prop, ...) {
 #' `validate_df_by_key()` is a convenience wrapper for `validate_ds()` for the common case in which the
 #' data set is a dataframe.
 #'
-#' @param tree The tree to validate against
-#' @param df A datafame
-#' @param key Name of the column serving as key
-#' @param prop Property whose value is checked (leaf elements only)
-#' @param ... Other parameters passed to validate_ds()
+#' @param tree tree to validate against
+#' @param df data frame
+#' @param key name of the column serving as key
+#' @param prop property whose value is checked (leaf elements only)
+#' @param ... other parameters passed to validate_ds()
 #'
 #' @return TRUE if validation succeeds, halts otherwise
 #' @export
@@ -222,10 +224,10 @@ validate_df_by_key <- function(tree, df, key, prop, ...) {
 #' data set is a dataframe with key column named "id".
 
 #'
-#' @param tree The tree to validate against
-#' @param df A datafame
-#' @param prop Property whose value is checked (leaf elements only)
-#' @param ... Other parameters passed to validate_ds()
+#' @param tree tree to validate against
+#' @param df data frame
+#' @param prop property whose value is checked (leaf elements only)
+#' @param ... other parameters passed to validate_ds()
 #'
 #' @return TRUE if validation succeeds, halts otherwise
 #' @export

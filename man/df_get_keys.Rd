@@ -7,9 +7,9 @@
 df_get_keys(df, key)
 }
 \arguments{
-\item{df}{A data frame}
+\item{df}{a data frame}
 
-\item{key}{Name of the column used as key}
+\item{key}{name of the column used as key}
 }
 \value{
 All values of the key column
