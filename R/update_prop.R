@@ -89,7 +89,7 @@ df_get_ids <- function(df) df_get_keys(df, "id")
 #' @export
 #'
 #' @examples
-#' df_get_by_key(wbs_table, "id", "1", "work")
+#' df_get_by_key(wbs_table, "id", "1.1", "work")
 df_get_by_key <- function(df, key, keyval, prop) df[df[, key] == keyval, prop]
 
 #' Get property by key "id" from data frame

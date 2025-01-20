@@ -23,5 +23,5 @@ The requested value
 of a data frame. The row is specified by a key column and a value from that column.
 }
 \examples{
-df_get_by_key(wbs_table, "id", "1", "work")
+df_get_by_key(wbs_table, "id", "1.1", "work")
 }

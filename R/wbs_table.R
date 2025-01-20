@@ -1,4 +1,4 @@
-#' Example Work Breakdown Structure Data (Leaf Elements Only)
+#' Example Work Breakdown Structure Data
 #' @source <https://www.workbreakdownstructure.com>
 #' @format A data frame with columns:
 #' \describe{
