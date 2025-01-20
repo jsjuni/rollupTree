@@ -270,7 +270,7 @@ Fault tree analysis is similarly recursive. We show here a
 greatly-simplified [@fta] example to illustrate a particular feature of
 the implementation.
 
-![](fta-example.jpg)
+![https://control.com/technical-articles/deep-dive-into-fault-tree-analysis/](fta-example.jpg)
 
 For the purpose of illustration, we make the following simplifying
 assumptions:

@@ -11,8 +11,7 @@ update_prop(
   set,
   get,
   combine = function(l) Reduce("+", l),
-  override = function(ds, target, v) v,
-  ...
+  override = function(ds, target, v) v
 )
 }
 \arguments{
@@ -22,15 +21,13 @@ update_prop(
 
 \item{sources}{keys of data set elements to be combined}
 
-\item{set}{function to set properties for a target element}
+\item{set}{function to set properties for a target element called as set(ds, key, value)}
 
-\item{get}{function to get properties for source elements}
+\item{get}{function to get properties for source elements called as get(ds, key)}
 
-\item{combine}{function to combine properties}
+\item{combine}{function to combine properties called as combine(vl)}
 
-\item{override}{function to selectively override combined results}
-
-\item{...}{additional arguments passed to the combiner}
+\item{override}{function to selectively override combined results called as override(ds, key,)}
 }
 \value{
 updated data set
