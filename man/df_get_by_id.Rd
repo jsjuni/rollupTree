@@ -7,11 +7,11 @@
 df_get_by_id(df, idval, prop)
 }
 \arguments{
-\item{df}{A data frame}
+\item{df}{a data frame}
 
-\item{idval}{ID of the row to get}
+\item{idval}{id of the row to get}
 
-\item{prop}{Name of the column to get}
+\item{prop}{name of the column to get}
 }
 \value{
 The requested value

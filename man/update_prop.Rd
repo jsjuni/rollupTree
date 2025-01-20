@@ -15,22 +15,22 @@ update_prop(
 )
 }
 \arguments{
-\item{ds}{Data set to be updated}
+\item{ds}{data set to be updated}
 
-\item{target}{Key of data set element to be updated}
+\item{target}{key of data set element to be updated}
 
-\item{sources}{Keys of data set elements to be combined}
+\item{sources}{keys of data set elements to be combined}
 
-\item{set}{Method to set properties for a target element}
+\item{set}{function to set properties for a target element called as set(ds, key, value)}
 
-\item{get}{Method to get properties for source elements}
+\item{get}{function to get properties for source elements called as get(ds, key)}
 
-\item{combine}{Method to combine properties}
+\item{combine}{function to combine properties called as combine(vl)}
 
-\item{override}{Method to selectively override combine() results}
+\item{override}{function to selectively override combined results called as override(ds, key,)}
 }
 \value{
-Updated data set
+updated data set
 }
 \description{
 \code{update_prop} calls user-specified methods to get properties
@@ -41,7 +41,7 @@ default combine operation is addition.
 
 The \code{override} argument can be used to selectively override the
 computed value based on the target element. By default, it simply
-returns the value computed by \code{combine}.
+returns the value computed by the combiner.
 }
 \examples{
 update_prop(wbs_table, "1", list("1.1", "1.2"),

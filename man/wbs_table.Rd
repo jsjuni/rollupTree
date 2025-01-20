@@ -3,7 +3,7 @@
 \docType{data}
 \name{wbs_table}
 \alias{wbs_table}
-\title{Example Work Breakdown Structure Data (Leaf Elements Only)}
+\title{Example Work Breakdown Structure Data}
 \format{
 A data frame with columns:
 \describe{
@@ -21,6 +21,6 @@ A data frame with columns:
 wbs_table
 }
 \description{
-Example Work Breakdown Structure Data (Leaf Elements Only)
+Example Work Breakdown Structure Data
 }
 \keyword{datasets}

@@ -7,10 +7,10 @@
 df_get_ids(df)
 }
 \arguments{
-\item{df}{A data frame}
+\item{df}{a data frame}
 }
 \value{
-All values of the \code{id} column
+all values of the \code{id} column
 }
 \description{
 The default name for a key column in \code{rollup} is \code{id}. \code{df_get_ids} gets all values

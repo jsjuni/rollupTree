@@ -7,15 +7,15 @@
 df_set_by_key(df, key, keyval, prop, val)
 }
 \arguments{
-\item{df}{A data frame}
+\item{df}{a data frame}
 
-\item{key}{Name of the column used as key}
+\item{key}{name of the column used as key}
 
-\item{keyval}{Value of the key for the specified row}
+\item{keyval}{value of the key for the specified row}
 
-\item{prop}{Column name of the property value to get}
+\item{prop}{column name of the property value to get}
 
-\item{val}{Value to set}
+\item{val}{value to set}
 }
 \value{
 The updated data frame
