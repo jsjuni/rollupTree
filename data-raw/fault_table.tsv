@@ -1,0 +1,9 @@
+id	type	prob
+Water overflowing	or	NA
+Circuit failure and no warning lamp	and	NA
+Sensor failure	basic	0.02
+No voltage at input	or	NA
+Chip failure	basic	0.05
+Warning lamp burned	basic	0.03
+No V in network	basic	0.12
+Fuse burned	basic	0.23

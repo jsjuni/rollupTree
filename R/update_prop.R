@@ -14,11 +14,10 @@
 #' @param ds data set to be updated
 #' @param target key of data set element to be updated
 #' @param sources keys of data set elements to be combined
-#' @param set function to set properties for a target element
-#' @param get function to get properties for source elements
-#' @param combine function to combine properties
-#' @param override function to selectively override combined results
-#' @param ... additional arguments passed to the combiner
+#' @param set function to set properties for a target element called as set(ds, key, value)
+#' @param get function to get properties for source elements called as get(ds, key)
+#' @param combine function to combine properties called as combine(vl)
+#' @param override function to selectively override combined results called as override(ds, key,)
 #'
 #' @return updated data set
 #' @export
@@ -35,11 +34,10 @@
 #' )
 update_prop <- function(ds, target, sources, set, get,
                         combine = function(l) Reduce('+', l),
-                        override = function(ds, target, v) v,
-                        ...) {
+                        override = function(ds, target, v) v) {
   if (length(sources) > 0) {
     av <- Map(f = function(s) get(ds, s), sources)
-    set(ds, target, override(ds, target, combine(av, ...)))
+    set(ds, target, override(ds, target, combine(av)))
   } else
     ds
 }
@@ -146,7 +144,7 @@ df_set_by_id <- function(df, idval, prop, val) {
   df
 }
 
-#' Update a property in a dataframe
+#' Update a property in a data frame
 #'
 #' `update_df_prop_by_key()` is a convenience wrapper around `update_prop()`
 #' for the common case in which the data set is a data frame.
@@ -171,7 +169,7 @@ update_df_prop_by_key <- function(df, key, target, sources, prop, ...) {
   )
 }
 
-#' Update a property in a dataframe with key "id"
+#' Update a property in a data frame with key "id"
 #'
 #' `update_df_prop_by_id()` is a convenience wrapper around `update_prop()`
 #' for the common case in which the data set is a data frame whose key column
@@ -196,7 +194,7 @@ update_df_prop_by_id <- function(df, target, sources, prop, ...) {
   )
 }
 
-#' Validate a dataframe For rollup()
+#' Validate a data frame For `rollup()`
 #'
 #' @description
 #' `validate_df_by_key()` is a convenience wrapper for `validate_ds()` for the common case in which the
@@ -217,11 +215,11 @@ validate_df_by_key <- function(tree, df, key, prop, ...) {
   validate_ds(tree, df, function(d) df_get_keys(d, key), function(d, r) df_get_by_key(d, key, r, prop), ...)
 }
 
-#' Validate a dataframe with key "id" for `rollup()`
+#' Validate a data frame with key "id" for `rollup()`
 #'
 #' @description
 #' `validate_df_by_id()` is a convenience wrapper for `validate_ds()` for the common case in which the
-#' data set is a dataframe with key column named "id".
+#' data set is a data frame with key column named "id".
 
 #'
 #' @param tree tree to validate against

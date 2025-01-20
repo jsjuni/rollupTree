@@ -1,0 +1,8 @@
+parent	child
+Water overflowing	Circuit failure and no warning lamp
+Water overflowing	Sensor failure
+Water overflowing	No voltage at input
+Circuit failure and no warning lamp	Chip failure
+Circuit failure and no warning lamp	Warning lamp burned
+No voltage at input	No V in network
+No voltage at input	Fuse burned

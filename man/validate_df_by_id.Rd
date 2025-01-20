@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_prop.R
 \name{validate_df_by_id}
 \alias{validate_df_by_id}
-\title{Validate a dataframe with key "id" for \code{rollup()}}
+\title{Validate a data frame with key "id" for \code{rollup()}}
 \usage{
 validate_df_by_id(tree, df, prop, ...)
 }
@@ -20,7 +20,7 @@ TRUE if validation succeeds, halts otherwise
 }
 \description{
 \code{validate_df_by_id()} is a convenience wrapper for \code{validate_ds()} for the common case in which the
-data set is a dataframe with key column named "id".
+data set is a data frame with key column named "id".
 }
 \examples{
 validate_df_by_id(wbs_tree, wbs_table, "work")

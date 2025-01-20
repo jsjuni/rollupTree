@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_prop.R
 \name{validate_df_by_key}
 \alias{validate_df_by_key}
-\title{Validate a dataframe For rollup()}
+\title{Validate a data frame For rollup()}
 \usage{
 validate_df_by_key(tree, df, key, prop, ...)
 }

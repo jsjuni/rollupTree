@@ -229,7 +229,6 @@ The output of `rollup()` is as expected:
 ```{r}
 list_result <- rollup(wbs_tree, wbs_list, list_update, list_validate)
 str(list_result)
-
 ```
 
 # Example With A Tree
@@ -263,6 +262,92 @@ tree_result <- rollup(new_wbs_tree, new_wbs_tree, update = tree_update, validate
 ob <- vertex_attr(tree_result, "budget")
 names(ob) <- names(V(tree_result))
 ob
+```
+
+# Simple Fault Tree Analysis
+
+Fault tree analysis is similarly recursive. We show here a
+greatly-simplified [@fta] example to illustrate a particular feature of
+the implementation.
+
+![](fta-example.jpg)
+
+For the purpose of illustration, we make the following simplifying
+assumptions:
+
+-   Every gate is associated with an intermediate event, and each
+    gate/event pair can be represented by a single vertex in the tree.
+
+-   Only gates of type AND and OR are permitted.
+
+Our initial fault properties table is:
+
+```{r echo = FALSE}
+fault_table
+```
+
+The edge list of the fault tree is:
+
+```{r echo = FALSE}
+igraph::E(fault_tree)
+```
+
+Get and set methods for this example are simple and obvious:
+
+```{r}
+df_get_fault_props <- function(df, id) {
+  list(
+    type = df_get_by_id(df, id, "type"),
+    prob = df_get_by_id(df, id, "prob")
+  )
+}
+
+df_set_fault_props <- function(df, id, v) {
+  df_set_by_id(df, id, "prob", v$prob)
+}
+```
+
+In most applications (e.g., mass properties), the combining operation  only the values to be combined, and is therefore passed only
+those values as input. In the case of a fault tree, however, the input for an AND gate are multiplied, whereas for an OR gate  are summed. We can accommodate this situation by passing an optional *type* argument to the combiner  follows:
+
+```{r}
+combine_fault_props <- function(vl, type) {
+  list(
+    prob = Reduce(
+      f = if (type == "and") "*" else "+",
+      Map(f = function(v) v$prob, vl)
+    )
+  )
+}
+
+update_fault_props <- function(ds, parent_key, child_keys) {
+  update_prop(
+    ds,
+    target = parent_key,
+    sources = child_keys,
+    set = df_set_fault_props,
+    get = df_get_fault_props,
+    combine = function(vl)
+      combine_fault_props(vl, df_get_fault_props(ds, parent_key)$type)
+  )
+}
+
+validate_fault_props <- function(fp) {
+  if (fp$type != "basic") stop(sprintf("invalid leaf node type %s", fp$type))
+  if (!is.numeric(fp$prob) || fp$prob < 0.0 || fp$prob > 1.0)
+    stop(sprintf("invalid probability value %f", fp$prob))
+  TRUE
+}
+
+validate_fault_props_table <- function(tree, df) {
+  validate_ds(tree, df, df_get_ids, df_get_fault_props, validate_fault_props)
+}
+```
+
+Calling `rollup()` in the usual manner yields:
+
+```{r echo = FALSE}
+rollup(fault_tree, fault_table, update_fault_props, validate_fault_props_table)
 ```
 
 # References
