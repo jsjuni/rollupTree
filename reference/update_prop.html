@@ -6,14 +6,14 @@ If the source set is empty, the data set is returned unmodified. The
 default combine operation is addition.
 The override argument can be used to selectively override the
 computed value based on the target element. By default, it simply
-returns the value computed by combine."><meta property="og:description" content="update_prop calls user-specified methods to get properties
+returns the value computed by the combiner."><meta property="og:description" content="update_prop calls user-specified methods to get properties
 of a source set of elements in a data set, combine those properties,
 and set the properties of a target element to the combined value.
 If the source set is empty, the data set is returned unmodified. The
 default combine operation is addition.
 The override argument can be used to selectively override the
 computed value based on the target element. By default, it simply
-returns the value computed by combine."></head><body>
+returns the value computed by the combiner."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -44,7 +44,7 @@ returns the value computed by combine."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Update a data set with recursively-defined properties</h1>
-      <small class="dont-index">Source: <a href="https://github.com/jsjuni/rollupTree/blob/v0.1.0/R/update_prop.R" class="external-link"><code>R/update_prop.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jsjuni/rollupTree/blob/main/R/update_prop.R" class="external-link"><code>R/update_prop.R</code></a></small>
       <div class="d-none name"><code>update_prop.Rd</code></div>
     </div>
 
@@ -56,7 +56,7 @@ If the source set is empty, the data set is returned unmodified. The
 default combine operation is addition.</p>
 <p>The <code>override</code> argument can be used to selectively override the
 computed value based on the target element. By default, it simply
-returns the value computed by <code>combine</code>.</p>
+returns the value computed by the combiner.</p>
     </div>
 
     <div class="section level2">
@@ -77,36 +77,36 @@ returns the value computed by <code>combine</code>.</p>
 
 
 <dl><dt id="arg-ds">ds<a class="anchor" aria-label="anchor" href="#arg-ds"></a></dt>
-<dd><p>Data set to be updated</p></dd>
+<dd><p>data set to be updated</p></dd>
 
 
 <dt id="arg-target">target<a class="anchor" aria-label="anchor" href="#arg-target"></a></dt>
-<dd><p>Key of data set element to be updated</p></dd>
+<dd><p>key of data set element to be updated</p></dd>
 
 
 <dt id="arg-sources">sources<a class="anchor" aria-label="anchor" href="#arg-sources"></a></dt>
-<dd><p>Keys of data set elements to be combined</p></dd>
+<dd><p>keys of data set elements to be combined</p></dd>
 
 
 <dt id="arg-set">set<a class="anchor" aria-label="anchor" href="#arg-set"></a></dt>
-<dd><p>Method to set properties for a target element</p></dd>
+<dd><p>function to set properties for a target element called as set(ds, key, value)</p></dd>
 
 
 <dt id="arg-get">get<a class="anchor" aria-label="anchor" href="#arg-get"></a></dt>
-<dd><p>Method to get properties for source elements</p></dd>
+<dd><p>function to get properties for source elements called as get(ds, key)</p></dd>
 
 
 <dt id="arg-combine">combine<a class="anchor" aria-label="anchor" href="#arg-combine"></a></dt>
-<dd><p>Method to combine properties</p></dd>
+<dd><p>function to combine properties called as combine(vl)</p></dd>
 
 
 <dt id="arg-override">override<a class="anchor" aria-label="anchor" href="#arg-override"></a></dt>
-<dd><p>Method to selectively override combine() results</p></dd>
+<dd><p>function to selectively override combined results called as override(ds, key,)</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Updated data set</p>
+    <p>updated data set</p>
     </div>
 
     <div class="section level2">
