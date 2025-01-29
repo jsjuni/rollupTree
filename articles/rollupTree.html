@@ -129,18 +129,10 @@ implementation in software is not recursive.)</p>
 <p>It is a simple matter to construct a graph from the information in
 our data frame:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.igraph.org/" class="external-link">igraph</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'igraph'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     decompose, spectrum</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     union</span></span>
-<span><span class="va">wbs_tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/graph_from_edgelist.html" class="external-link">graph_from_edgelist</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">wbs_table</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">wbs_table</span><span class="op">$</span><span class="va">pid</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"pid"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>  directed <span class="op">=</span> <span class="cn">TRUE</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jsjuni.github.io/rollupTree/">rollupTree</a></span><span class="op">)</span></span>
+<span><span class="va">wbs_tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_rollup_tree.html">create_rollup_tree</a></span><span class="op">(</span></span>
+<span>  get_keys <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="va">wbs_table</span><span class="op">$</span><span class="va">id</span>,</span>
+<span>  get_parent_key_by_child_key <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">key</span><span class="op">)</span> <span class="va">wbs_table</span><span class="op">[</span><span class="va">wbs_table</span><span class="op">$</span><span class="va">id</span> <span class="op">==</span> <span class="va">key</span>, <span class="st">"pid"</span><span class="op">]</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="wbs-tree">
@@ -151,7 +143,7 @@ is suitable for our purpose. Here is what <code><a href="../reference/rollup.htm
 internally:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/topo_sort.html" class="external-link">topo_sort</a></span><span class="op">(</span><span class="va">wbs_tree</span><span class="op">)</span></span>
-<span><span class="co">#&gt; + 10/10 vertices, named, from 0209211:</span></span>
+<span><span class="co">#&gt; + 10/10 vertices, named, from a6c1caa:</span></span>
 <span><span class="co">#&gt;  [1] 1.1 1.2 2.1 2.2 3.1 3.2 1   2   3   top</span></span></code></pre></div>
 <!--# plot created by coords <- layout_(wbs_tree, as_tree(mode="in")) plot(wbs_tree, layout=coords, vertex.size = 30) -->
 </div>
@@ -468,7 +460,16 @@ follows:</p>
 To illustrate, we add the budget figures from our data frame as vertex
 attributes to the tree:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_wbs_tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.igraph.org/" class="external-link">igraph</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'igraph'</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     decompose, spectrum</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     union</span></span>
+<span><span class="va">new_wbs_tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span></span>
 <span>  f <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">g</span>, <span class="va">k</span><span class="op">)</span> <span class="fu"><a href="https://r.igraph.org/reference/set_vertex_attr.html" class="external-link">set_vertex_attr</a></span><span class="op">(</span><span class="va">g</span>, <span class="st">'budget'</span>, <span class="va">k</span>, <span class="fu"><a href="../reference/df_get_by_id.html">df_get_by_id</a></span><span class="op">(</span><span class="va">wbs_table</span>, <span class="va">k</span>, <span class="st">'budget'</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">wbs_tree</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  init <span class="op">=</span> <span class="va">wbs_tree</span></span>
@@ -476,7 +477,7 @@ attributes to the tree:</p>
 <span><span class="va">ib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/vertex_attr.html" class="external-link">vertex_attr</a></span><span class="op">(</span><span class="va">new_wbs_tree</span>, <span class="st">"budget"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ib</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">new_wbs_tree</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">ib</span></span>
-<span><span class="co">#&gt;     1   top     2     3   1.1   1.2   2.1   2.2   3.1   3.2 </span></span>
+<span><span class="co">#&gt;   top     1     2     3   1.1   1.2   2.1   2.2   3.1   3.2 </span></span>
 <span><span class="co">#&gt;    NA    NA    NA    NA 25000 61000 37000  9000 62000 21500</span></span></code></pre></div>
 <p>We construct <em>update</em> and <em>validate</em> functions as
 follows:</p>
@@ -491,8 +492,8 @@ follows:</p>
 <span><span class="va">ob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/vertex_attr.html" class="external-link">vertex_attr</a></span><span class="op">(</span><span class="va">tree_result</span>, <span class="st">"budget"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ob</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">tree_result</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">ob</span></span>
-<span><span class="co">#&gt;      1    top      2      3    1.1    1.2    2.1    2.2    3.1    3.2 </span></span>
-<span><span class="co">#&gt;  86000 215500  46000  83500  25000  61000  37000   9000  62000  21500</span></span></code></pre></div>
+<span><span class="co">#&gt;    top      1      2      3    1.1    1.2    2.1    2.2    3.1    3.2 </span></span>
+<span><span class="co">#&gt; 215500  86000  46000  83500  25000  61000  37000   9000  62000  21500</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="simple-fault-tree-analysis">Simple Fault Tree Analysis<a class="anchor" aria-label="anchor" href="#simple-fault-tree-analysis"></a>
