@@ -18,3 +18,9 @@ An \code{igraph} directed graph with vertices and edges as supplied
 \code{create_rollup_tree()} creates a tree suitable for use with \code{rollup()}
 by applying helper functions to construct vertices and edges.
 }
+\examples{
+get_keys <- function() wbs_table$id
+get_parent_key_by_child_key <- function(key) wbs_table[which(wbs_table$id == key), "pid"]
+create_rollup_tree(get_keys, get_parent_key_by_child_key)
+
+}

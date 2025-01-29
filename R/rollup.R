@@ -152,6 +152,10 @@ default_validate_tree <- function(tree) {
 #' @export
 #'
 #' @examples
+#' get_keys <- function() wbs_table$id
+#' get_parent_key_by_child_key <- function(key) wbs_table[which(wbs_table$id == key), "pid"]
+#' create_rollup_tree(get_keys, get_parent_key_by_child_key)
+#'
 create_rollup_tree <- function(get_keys, get_parent_key_by_child_key) {
   keys <- get_keys()
   Reduce(
