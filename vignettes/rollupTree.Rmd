@@ -52,10 +52,10 @@ A key feature of recursively-defined problems like this is that the computations
 It is a simple matter to construct a graph from the information in our data frame:
 
 ```{r wbs_tree-plot}
-library(igraph)
-wbs_tree <- graph_from_edgelist(
-  as.matrix(wbs_table[which(!is.na(wbs_table$pid)), c("id", "pid")]),
-  directed = TRUE
+library(rollupTree)
+wbs_tree <- create_rollup_tree(
+  get_keys = function() wbs_table$id,
+  get_parent_key_by_child_key = function(key) wbs_table[wbs_table$id == key, "pid"]
 )
 ```
 
@@ -236,6 +236,7 @@ str(list_result)
 The tree can serve as the dataset with proper attributes and methods. To illustrate, we add the budget figures from our data frame as vertex attributes to the tree:
 
 ```{r}
+library(igraph)
 new_wbs_tree <- Reduce(
   f = function(g, k) set_vertex_attr(g, 'budget', k, df_get_by_id(wbs_table, k, 'budget')),
   x = names(V(wbs_tree)),
