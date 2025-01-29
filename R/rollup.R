@@ -138,3 +138,35 @@ default_validate_tree <- function(tree) {
   if (length(roots) > 1) stop("graph contains multiple roots")
   roots[1]
 }
+
+#' Create a tree for use with `rollup()`
+#'
+#' @description
+#' `create_rollup_tree()` creates a tree suitable for use with `rollup()`
+#' by applying helper functions to construct vertices and edges.
+#'
+#' @param get_keys A function() that returns a collection of names for vertices.
+#' @param get_parent_key_by_child_key A function(key) that returns for each child key the key of its parent.
+#'
+#' @returns An `igraph` directed graph with vertices and edges as supplied
+#' @export
+#'
+#' @examples
+create_rollup_tree <- function(get_keys, get_parent_key_by_child_key) {
+  keys <- get_keys()
+  Reduce(
+    f = function(g, e) igraph::add_edges(g, igraph::V(g)[c(e[1], e[2])]),
+    x = Filter(
+      f = function(e) !is.na(e[2]),
+      Map(
+        f = function(id) c(id, get_parent_key_by_child_key(id)),
+        keys
+      )
+    ),
+    init = igraph::add_vertices(
+      graph = igraph::make_empty_graph(directed = TRUE),
+      nv = length(keys),
+      name = keys
+    )
+  )
+}

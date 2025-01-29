@@ -102,3 +102,23 @@ test_that("default_validate_tree() rejects a graph with multiple roots", {
   bad_graph <- wbs_tree |> igraph::add_vertices(1, name = ("bad")) |> igraph::add_edges(c("1", "bad"))
   expect_error(default_validate_tree(bad_graph), "graph contains multiple roots")
 })
+
+test_that("tree_from_table() works", {
+  tree1 <- create_rollup_tree(
+    get_keys = function() wbs_table$id,
+    get_parent_key_by_child_key = function(key) wbs_table[wbs_table$id == key, "pid"]
+  )
+  expect_true(igraph::is_isomorphic_to(wbs_tree, tree1))
+
+  tree2 <- create_rollup_tree(
+    get_keys = function() df_get_keys(wbs_table, "id"),
+    get_parent_key_by_child_key = function(key) df_get_by_key(wbs_table, "id", key, "pid")
+  )
+  expect_true(igraph::is_isomorphic_to(wbs_tree, tree2))
+
+  tree3 <- create_rollup_tree(
+    get_keys = function() df_get_ids(wbs_table),
+    get_parent_key_by_child_key = function(key) df_get_by_id(wbs_table, key, "pid")
+  )
+  expect_true(igraph::is_isomorphic_to(wbs_tree, tree3))
+})
