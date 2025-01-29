@@ -9,3 +9,5 @@
 * Added fault tree example
 
 * Documentation cleanup
+
+* Added create_rollup_tree() convenience function
