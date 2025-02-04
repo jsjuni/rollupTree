@@ -4,6 +4,7 @@
 # rollupTree
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 rollupTree implements a general function for computations in which some
