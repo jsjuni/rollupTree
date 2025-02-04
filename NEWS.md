@@ -1,4 +1,4 @@
-# rollupTree (development version)
+# rollupTree 0.2.0
 
 # rollupTree 0.1.0
 
