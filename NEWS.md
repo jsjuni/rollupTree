@@ -6,8 +6,9 @@
 
 # rollupTree 0.2.0
 
-* Added fault tree example
+* Fault tree example added.
 
-* Documentation cleanup
+* Documentation cleaned up.
 
-* Added create_rollup_tree() convenience function
+* `create_rollup_tree()` (new) creates a tree suitable for `rollup()` from a data
+    frame with child/parent identifier pairs.
