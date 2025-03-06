@@ -80,7 +80,7 @@ test_that("default_validate_tree() rejects a cyclic graph (2)", {
 
 test_that("default_validate_tree() rejects a graph with loops", {
   bad_graph <- wbs_tree |> igraph::add_edges(c("top", "top"))
-  expect_error(default_validate_tree(bad_graph), "graph is cyclic")
+  expect_error(default_validate_tree(bad_graph), "graph contains loops")
 })
 
 test_that("default_validate_tree() rejects a graph with multiple edges", {
@@ -101,6 +101,109 @@ test_that("default_validate_tree() rejects an undirected graph", {
 test_that("default_validate_tree() rejects a graph with multiple roots", {
   bad_graph <- wbs_tree |> igraph::add_vertices(1, name = ("bad")) |> igraph::add_edges(c("1", "bad"))
   expect_error(default_validate_tree(bad_graph), "graph contains multiple roots")
+})
+
+test_that("default_validate_tree() finds the root of a valid tree", {
+  expect_equal(names(default_validate_tree(wbs_tree)), "top")
+})
+
+test_that("default_validate_tree() rejects a cyclic graph (1)", {
+  bad_graph <- wbs_tree |> igraph::add_edges(c("top", "1.2"))
+  expect_error(default_validate_tree(bad_graph), "graph is cyclic")
+})
+
+test_that("default_validate_tree() rejects a cyclic graph (2)", {
+  bad_graph <- wbs_tree |> igraph::add_edges(c("1", "1.2"))
+  expect_error(default_validate_tree(bad_graph), "graph is cyclic")
+})
+
+test_that("default_validate_tree() rejects a graph with loops", {
+  bad_graph <- wbs_tree |> igraph::add_edges(c("top", "top"))
+  expect_error(default_validate_tree(bad_graph), "graph contains loops")
+})
+
+test_that("default_validate_tree() rejects a graph with multiple edges", {
+  bad_graph <- wbs_tree |> igraph::add_edges(c("1", "top"))
+  expect_error(default_validate_tree(bad_graph), "graph contains multiple edges")
+})
+
+test_that("default_validate_tree() rejects a disconnected graph", {
+  bad_graph <- wbs_tree |> igraph::delete_edges(c("1|top"))
+  expect_error(default_validate_tree(bad_graph), "graph is disconnected")
+})
+
+test_that("default_validate_tree() rejects an undirected graph", {
+  bad_graph <- igraph::as_undirected(wbs_tree)
+  expect_error(default_validate_tree(bad_graph), "graph is undirected")
+})
+
+test_that("default_validate_tree() rejects a graph with multiple roots", {
+  bad_graph <- wbs_tree |> igraph::add_vertices(1, name = ("bad")) |> igraph::add_edges(c("1", "bad"))
+  expect_error(default_validate_tree(bad_graph), "graph contains multiple roots")
+})
+
+test_that("default_validate_dag() accepts valid DAG", {
+  expect_true(default_validate_dag(test_dag))
+})
+
+test_that("default_validate_dag() rejects a cyclic graph (1)", {
+  bad_graph <- test_dag |> igraph::add_edges(c("top", "1.2"))
+  expect_error(default_validate_dag(bad_graph), "graph is not a DAG")
+})
+
+test_that("default_validate_dag() rejects a cyclic graph (2)", {
+  bad_graph <- test_dag |> igraph::add_edges(c("1", "1.2"))
+  expect_error(default_validate_dag(bad_graph), "graph is not a DAG")
+})
+
+test_that("default_validate_dag() rejects a graph with loops", {
+  bad_graph <- test_dag |> igraph::add_edges(c("top", "top"))
+  expect_error(default_validate_dag(bad_graph), "graph contains loops")
+})
+
+test_that("default_validate_dag() rejects a graph with multiple edges", {
+  bad_graph <- test_dag |> igraph::add_edges(c("1", "top"))
+  expect_error(default_validate_dag(bad_graph), "graph contains multiple edges")
+})
+
+test_that("default_validate_dag() rejects a disconnected graph", {
+  bad_graph <- test_dag |> igraph::delete_edges(c("1|top"))
+  expect_error(default_validate_dag(bad_graph), "graph is disconnected")
+})
+
+test_that("default_validate_dag() rejects an undirected graph", {
+  bad_graph <- igraph::as_undirected(test_dag)
+  expect_error(default_validate_dag(bad_graph), "graph is not a DAG")
+})
+
+test_that("default_validate_dag() rejects a cyclic graph (1)", {
+  bad_graph <- test_dag |> igraph::add_edges(c("top", "1.2"))
+  expect_error(default_validate_dag(bad_graph), "graph is not a DAG")
+})
+
+test_that("default_validate_dag() rejects a cyclic graph (2)", {
+  bad_graph <- test_dag |> igraph::add_edges(c("1", "1.2"))
+  expect_error(default_validate_dag(bad_graph), "graph is not a DAG")
+})
+
+test_that("default_validate_dag() rejects a graph with loops", {
+  bad_graph <- test_dag |> igraph::add_edges(c("top", "top"))
+  expect_error(default_validate_dag(bad_graph), "graph contains loops")
+})
+
+test_that("default_validate_dag() rejects a graph with multiple edges", {
+  bad_graph <- test_dag |> igraph::add_edges(c("1", "top"))
+  expect_error(default_validate_dag(bad_graph), "graph contains multiple edges")
+})
+
+test_that("default_validate_dag() rejects a disconnected graph", {
+  bad_graph <- test_dag |> igraph::delete_edges(c("1|top"))
+  expect_error(default_validate_dag(bad_graph), "graph is disconnected")
+})
+
+test_that("default_validate_dag() rejects an undirected graph", {
+  bad_graph <- igraph::as_undirected(test_dag)
+  expect_error(default_validate_dag(bad_graph), "graph is not a DAG")
 })
 
 test_that("tree_from_table() works", {

@@ -20,6 +20,10 @@ cases (atomic numerical properties combined by summing), but functional
 programming techniques allow the caller to pass arbitrary update methods
 as required.
 
+Despite its name, rollupTree can operate on directed acyclic graphs that
+are not trees if instructed to apply less stringent validation rules to
+its input.
+
 ## Installation
 
 ``` r

@@ -130,13 +130,31 @@ validate_ds <- function(tree, ds, get_keys, get_prop, op=function(x) is.numeric(
 #' @examples
 #' default_validate_tree(wbs_tree)
 default_validate_tree <- function(tree) {
-  if (any(igraph::which_multiple(tree))) stop("graph contains multiple edges")
+  if (igraph::any_multiple(tree)) stop("graph contains multiple edges")
+  if (igraph::any_loop(tree)) stop("graph contains loops")
   if (!igraph::is_forest(tree, mode = "all")) stop("graph is cyclic")
   if (!igraph::is_connected(tree)) stop("graph is disconnected")
   if (!igraph::is_directed(tree)) stop("graph is undirected")
   roots <- which(igraph::degree(tree, mode = "out") == 0)
   if (length(roots) > 1) stop("graph contains multiple roots")
   roots[1]
+}
+
+#' Validate a directed acyclic graph for use with rollup
+#'
+#' @param dag An igraph directed acyclic graph
+#'
+#' @returns TRUE if valid, stops otherwise
+#' @export
+#'
+#' @examples
+#' default_validate_dag(test_dag)
+default_validate_dag <- function(dag) {
+  if (igraph::any_multiple(dag)) stop("graph contains multiple edges")
+  if (igraph::any_loop(dag)) stop("graph contains loops")
+  if (!igraph::is_dag(dag)) stop("graph is not a DAG")
+  if (!igraph::is_connected(dag)) stop("graph is disconnected")
+  TRUE
 }
 
 #' Create a tree for use with `rollup()`
