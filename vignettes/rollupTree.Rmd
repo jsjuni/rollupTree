@@ -26,6 +26,8 @@ library(rollupTree)
 
 `rollupTree` can perform computations specified by arbitrarily-shaped (but well-formed) trees, arbitrarily-defined properties and property-combining operations. Defaults are provided to simplify common cases (atomic numerical properties combined by summing), but functional programming techniques allow the caller to pass arbitrary *update* methods as required.
 
+Despite its name, rollupTree can operate on directed acyclic graphs that are not trees if instructed to apply less stringent validation rules to its input. See `default_validate_dag()` and `rollup()`.
+
 # Example With A Data Frame
 
 Consider this example Work Breakdown Structure from [WorkBreakdownStructure.com](https://www.workbreakdownstructure.com):

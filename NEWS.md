@@ -1,10 +1,6 @@
-# rollupTree (development version)
+# rollupTree 0.3.0
 
-# rollupTree 0.2.0
-
-# rollupTree 0.1.0
-
-* Initial CRAN submission.
+* `default_validate_dag()` added (#11)
 
 # rollupTree 0.2.0
 
@@ -14,3 +10,8 @@
 
 * `create_rollup_tree()` (new) creates a tree suitable for `rollup()` from a data
     frame with child/parent identifier pairs.
+
+# rollupTree 0.1.0
+
+* Initial CRAN submission.
+
