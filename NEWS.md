@@ -1,4 +1,4 @@
-# rollupTree (development version)
+# rollupTree 0.3.0
 
 * `default_validate_dag()` added (#11)
 
