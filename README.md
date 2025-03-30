@@ -5,6 +5,11 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/rollupTree)](https://CRAN.R-project.org/package=rollupTree)
+[![R-CMD-check](https://github.com/jsjuni/rollupTree/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jsjuni/rollupTree/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/jsjuni/rollupTree/graph/badge.svg)](https://app.codecov.io/gh/jsjuni/rollupTree)
 <!-- badges: end -->
 
 rollupTree implements a general function for computations in which some
