@@ -1,10 +1,10 @@
 # rollupTree (development version)
 
+* badges and github actions added to README.md (#14).
+
 # rollupTree 0.3.0
 
 * `default_validate_dag()` added (#11).
-
-* badges and github actions added to README.md (#14).
 
 # rollupTree 0.2.0
 
