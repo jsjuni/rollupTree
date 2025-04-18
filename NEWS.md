@@ -1,6 +1,6 @@
 # rollupTree (development version)
 
-* badges and github actions added to README.md (#14).
+* Badges and github actions added to README.md (#14).
 
 # rollupTree 0.3.0
 
