@@ -9,8 +9,8 @@
 |language |(EN)                                    |
 |collate  |en_US.UTF-8                             |
 |ctype    |en_US.UTF-8                             |
-|tz       |America/New_York                        |
-|date     |2025-03-30                              |
+|tz       |America/Chicago                         |
+|date     |2025-04-18                              |
 |rstudio  |2024.12.1+563 Kousa Dogwood (desktop)   |
 |pandoc   |3.6.4 @ /usr/local/bin/ (via rmarkdown) |
 
@@ -22,6 +22,7 @@
 |cli        |NA    |3.6.4      |*  |
 |cpp11      |NA    |0.5.2      |*  |
 |igraph     |NA    |2.1.4      |*  |
+|rlang      |NA    |1.1.6      |*  |
 
 # Revdeps
 
