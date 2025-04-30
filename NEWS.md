@@ -1,5 +1,7 @@
 # rollupTree (development version)
 
+* Minor improvements to vignette (#21).
+
 # rollupTree 0.3.1
 
 * Badges and github actions added to README.md (#14).
