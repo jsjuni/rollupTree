@@ -8,15 +8,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width = 6
 )
-```
-
-```{r setup}
 library(rollupTree)
 ```
 
@@ -49,7 +46,7 @@ library(rollupTree)
 wbs_table
 ```
 
-A key feature of recursively-defined problems like this is that the computations must be ordered in such a way that the computations for a given element must occur after properties for it children are known (either asserted or computed). Traversing a tree in this manner can be achieved by using a well-known algorithm in graph theory known as *topological sort*. For that reason, we construct an `igraph` [@igraph_manual] graph object in R, from which we can conveniently (1) check that the graph is in fact a well-formed tree, and (2) efficiently execute a topological sort to order the computations. (Note that, although the problems solved by rollup are *defined* recursively, the implementation in software is not recursive.)
+A key feature of recursively-defined problems like this is that the computation for a given element must occur after properties for it children are known (either asserted or computed). Traversing a tree in this manner can be achieved by using a well-known algorithm in graph theory known as *topological sort*. For that reason, we construct an `igraph` [@igraph_manual] graph object in R, from which we can conveniently (1) check that the graph is in fact a well-formed tree, and (2) efficiently execute a topological sort to order the computations. (Note that, although the problems solved by rollup are *defined* recursively, the implementation in software is not recursive.)
 
 It is a simple matter to construct a graph from the information in our data frame:
 
@@ -84,7 +81,9 @@ rollup(
 )
 ```
 
-`update_df_prop_by_id()` (like every well-behaved *update* method) modifies only the specified column and leaves the rest of the data frame unchanged. If we want to roll up the `budget` column as well, we can simply chain two `rollup()`s together. In this example we use R's pipe operator:
+## Chaining Rollups
+
+If we want to roll up the `budget` column as well, we can simply chain two `rollup()`s together. In this example we use R's pipe operator:
 
 ```{r}
 rollup(
@@ -104,7 +103,7 @@ In most cases, this approach suffices. The code is simple and clear, and perform
 
 ## Chaining Update Methods
 
-A valid *update* method returns the updated data set, so we can chain two updates within a single `rollup()` instead of chaining two `rollup()`s. Similarly, a data set validator returns a logical value, so we can make the conjunction of two validators:
+`update_df_prop_by_id()` (like every well-behaved *update* method) modifies only the specified column and leaves the rest of the data frame unchanged, so we can chain two updates within a single `rollup()` instead of chaining two `rollup()`s. Similarly, a data set validator returns a logical value, so we can make the conjunction of two validators:
 
 ```{r}
 rollup(
