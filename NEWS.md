@@ -1,3 +1,5 @@
+# rollupTree (development version)
+
 # rollupTree 0.3.2
 
 * Minor improvements to vignette (#21).
