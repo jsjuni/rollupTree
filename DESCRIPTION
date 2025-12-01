@@ -1,6 +1,6 @@
 Package: rollupTree
 Title: Perform Recursive Computations
-Version: 0.3.2
+Version: 0.4.0
 Authors@R: 
     person(given=c("James", "Steven"), family="Jenkins",
       email = "sjenkins@studioj.us",

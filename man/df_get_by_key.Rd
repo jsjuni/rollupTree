@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_prop.R
 \name{df_get_by_key}
 \alias{df_get_by_key}
-\title{Get property by key from data frame}
+\title{Get row by key "id" from data frame}
 \usage{
 df_get_by_key(df, key, keyval, prop)
 }
