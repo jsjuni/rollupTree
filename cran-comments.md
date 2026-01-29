@@ -1,6 +1,23 @@
 ## R CMD check results
 
-0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+  Maintainer: ‘James Steven Jenkins <sjenkins@studioj.us>’
+  
+  Version contains large components (0.3.2.9000)
+  
+  Found the following (possibly) invalid URLs:
+    URL: https://control.com/technical-articles/deep-dive-into-fault-tree-analysis/
+      From: man/fault_table.Rd
+            man/fault_tree.Rd
+            inst/doc/rollupTree.html
+      Status: 403
+      Message: Forbidden
+
+❯ checking for future file timestamps ... NOTE
+  unable to verify current time
+
+0 errors ✔ | 0 warnings ✔ | 2 notes ✖
+
+Forbidden URL above loads as expected in a browser.
 
 ## revdepcheck results
 
