@@ -87,7 +87,7 @@ df_get_ids <- function(df) { df_get_keys(df, "id") }
 #' df_get_row_by_key(wbs_table, "id", "1.1")
 df_get_row_by_key <- function(df, key, keyval) { as.list(df[df[, key] == keyval, ]) }
 
-#' Title
+#' Get row by key from data frame
 #'
 #' @param df a data frame
 #' @param idval id of the row to get
