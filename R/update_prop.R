@@ -145,7 +145,7 @@ df_get_by_id <- function(df, idval, prop) { df[df[, "id"] == idval, prop] }
 #' l <- list(id = "1.1", pid = "1", name = "Thermal", work = 11.9, budget = 25001)
 #' df_set_row_by_key(wbs_table, "id", "1.1", l)
 df_set_row_by_key <- function(df, key, keyval, list) {
-  df[df[, key] == keyval, ] <- as.data.frame(list)
+  df[df[, key] == keyval, names(list)] <- as.data.frame(list)
   df
 }
 
@@ -162,7 +162,7 @@ df_set_row_by_key <- function(df, key, keyval, list) {
 #' l <- list(id = "1.1", pid = "1", name = "Thermal", work = 11.9, budget = 25001)
 #' df_set_row_by_id(wbs_table, "1.1", l)
 df_set_row_by_id <- function(df, idval, list) {
-  df[df[, "id"] == idval, ] <- as.data.frame(list)
+  df[df[, "id"] == idval, names(list)] <- as.data.frame(list)
   df
 }
 
