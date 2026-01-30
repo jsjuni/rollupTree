@@ -1,0 +1,190 @@
+# rollupTree
+
+rollupTree implements a general function for computations in which some
+property of a parent element is a combination of corresponding
+properties of its child elements. The mass of an assembly, for example,
+is the sum of the masses of its subassemblies, and the mass of each
+subassembly is the sum of masses of its parts, etc.
+
+rollupTree can perform computations specified by arbitrarily-shaped (but
+well-formed) trees, arbitrarily-defined properties and
+property-combining operations. Defaults are provided to simplify common
+cases (atomic numerical properties combined by summing), but functional
+programming techniques allow the caller to pass arbitrary update methods
+as required.
+
+Despite its name, rollupTree can operate on directed acyclic graphs that
+are not trees if instructed to apply less stringent validation rules to
+its input.
+
+## Installation
+
+``` r
+install.packages("rollupTree")
+```
+
+You can install the development version of rollupTree from
+[GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+pak::pak("jsjuni/rollupTree")
+```
+
+## Example
+
+Suppose we have this data frame representing a work breakdown structure:
+
+``` r
+library(rollupTree)
+wbs_table
+#>     id  pid                    name budget
+#> 1  top <NA> Construction of a House     NA
+#> 2    1  top                Internal     NA
+#> 3    2  top              Foundation     NA
+#> 4    3  top                External     NA
+#> 5  1.1    1              Electrical  25000
+#> 6  1.2    1                Plumbing  61000
+#> 7  2.1    2                Excavate  37000
+#> 8  2.2    2          Steel Erection   9000
+#> 9  3.1    3            Masonry Work  62000
+#> 10 3.2    3       Building Finishes  21500
+```
+
+and this tree with edges representing child-parent relations in the
+breakdown:
+
+``` r
+igraph::E(wbs_tree)
+#> + 9/9 edges from dd17ef5 (vertex names):
+#> [1] 1  ->top 2  ->top 3  ->top 1.1->1   1.2->1   2.1->2   2.2->2   3.1->3  
+#> [9] 3.2->3
+```
+
+We can sum the budget numbers as follows:
+
+``` r
+rollup(
+  tree=wbs_tree,
+  ds=wbs_table,
+  update=function(d, t, s) update_df_prop_by_id(df=d, target=t, sources=s, prop="budget"),
+  validate_ds=function(t, d) validate_df_by_id(tree=t, df=d, prop="budget")
+)
+#>     id  pid                    name budget
+#> 1  top <NA> Construction of a House 215500
+#> 2    1  top                Internal  86000
+#> 3    2  top              Foundation  46000
+#> 4    3  top                External  83500
+#> 5  1.1    1              Electrical  25000
+#> 6  1.2    1                Plumbing  61000
+#> 7  2.1    2                Excavate  37000
+#> 8  2.2    2          Steel Erection   9000
+#> 9  3.1    3            Masonry Work  62000
+#> 10 3.2    3       Building Finishes  21500
+```
+
+# Package index
+
+## All functions
+
+- [`create_rollup_tree()`](https://jsjuni.github.io/rollupTree/reference/create_rollup_tree.md)
+  :
+
+  Create a tree for use with
+  [`rollup()`](https://jsjuni.github.io/rollupTree/reference/rollup.md)
+
+- [`default_validate_dag()`](https://jsjuni.github.io/rollupTree/reference/default_validate_dag.md)
+  : Validate a directed acyclic graph for use with rollup
+
+- [`default_validate_tree()`](https://jsjuni.github.io/rollupTree/reference/default_validate_tree.md)
+  :
+
+  Validate a tree for use with
+  [`rollup()`](https://jsjuni.github.io/rollupTree/reference/rollup.md)
+
+- [`df_get_by_id()`](https://jsjuni.github.io/rollupTree/reference/df_get_by_id.md)
+  : Get property by key "id" from data frame
+
+- [`df_get_by_key()`](https://jsjuni.github.io/rollupTree/reference/df_get_by_key.md)
+  : Get row by key "id" from data frame
+
+- [`df_get_ids()`](https://jsjuni.github.io/rollupTree/reference/df_get_ids.md)
+  : Get ids from a data frame
+
+- [`df_get_keys()`](https://jsjuni.github.io/rollupTree/reference/df_get_keys.md)
+  : Get keys from a data frame
+
+- [`df_get_row_by_id()`](https://jsjuni.github.io/rollupTree/reference/df_get_row_by_id.md)
+  : Title
+
+- [`df_get_row_by_key()`](https://jsjuni.github.io/rollupTree/reference/df_get_row_by_key.md)
+  : Get row by key from data frame
+
+- [`df_set_by_id()`](https://jsjuni.github.io/rollupTree/reference/df_set_by_id.md)
+  : Set property by key "id" in data frame
+
+- [`df_set_by_key()`](https://jsjuni.github.io/rollupTree/reference/df_set_by_key.md)
+  : Set property by key in data frame
+
+- [`df_set_row_by_id()`](https://jsjuni.github.io/rollupTree/reference/df_set_row_by_id.md)
+  : Set row by key "id" in data frame
+
+- [`df_set_row_by_key()`](https://jsjuni.github.io/rollupTree/reference/df_set_row_by_key.md)
+  : Set row by key in data frame
+
+- [`fault_table`](https://jsjuni.github.io/rollupTree/reference/fault_table.md)
+  : Example Fault Tree Data
+
+- [`fault_tree`](https://jsjuni.github.io/rollupTree/reference/fault_tree.md)
+  : Example Fault Tree
+
+- [`rollup()`](https://jsjuni.github.io/rollupTree/reference/rollup.md)
+  : Perform recursive computation
+
+- [`test_dag`](https://jsjuni.github.io/rollupTree/reference/test_dag.md)
+  : Example Directed Acyclic Graph
+
+- [`update_df_prop_by_id()`](https://jsjuni.github.io/rollupTree/reference/update_df_prop_by_id.md)
+  : Update a property in a data frame with key "id"
+
+- [`update_df_prop_by_key()`](https://jsjuni.github.io/rollupTree/reference/update_df_prop_by_key.md)
+  : Update a property in a data frame
+
+- [`update_prop()`](https://jsjuni.github.io/rollupTree/reference/update_prop.md)
+  : Update a data set with recursively-defined properties
+
+- [`update_rollup()`](https://jsjuni.github.io/rollupTree/reference/update_rollup.md)
+  : Update a rollup from a single leaf vertex
+
+- [`validate_df_by_id()`](https://jsjuni.github.io/rollupTree/reference/validate_df_by_id.md)
+  :
+
+  Validate a data frame with key "id" for
+  [`rollup()`](https://jsjuni.github.io/rollupTree/reference/rollup.md)
+
+- [`validate_df_by_key()`](https://jsjuni.github.io/rollupTree/reference/validate_df_by_key.md)
+  :
+
+  Validate a data frame For
+  [`rollup()`](https://jsjuni.github.io/rollupTree/reference/rollup.md)
+
+- [`validate_ds()`](https://jsjuni.github.io/rollupTree/reference/validate_ds.md)
+  :
+
+  Validates a data set for use with
+  [`rollup()`](https://jsjuni.github.io/rollupTree/reference/rollup.md)
+
+- [`wbs_table`](https://jsjuni.github.io/rollupTree/reference/wbs_table.md)
+  : Example Work Breakdown Structure Data
+
+- [`wbs_table_rollup`](https://jsjuni.github.io/rollupTree/reference/wbs_table_rollup.md)
+  : Example Work Breakdown Structure Data After Rollup
+
+- [`wbs_tree`](https://jsjuni.github.io/rollupTree/reference/wbs_tree.md)
+  : Example Work Breakdown Structure Data
+
+# Articles
+
+### All vignettes
+
+- [rollupTree](https://jsjuni.github.io/rollupTree/articles/rollupTree.md):
