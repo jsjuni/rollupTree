@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_prop.R
 \name{df_get_row_by_id}
 \alias{df_get_row_by_id}
-\title{Title}
+\title{Get row by key from data frame}
 \usage{
 df_get_row_by_id(df, idval)
 }
@@ -15,7 +15,7 @@ df_get_row_by_id(df, idval)
 A named list of values from the requested row
 }
 \description{
-Title
+Get row by key from data frame
 }
 \examples{
 df_get_row_by_id(wbs_table, "1.1")
