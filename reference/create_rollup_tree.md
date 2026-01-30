@@ -30,9 +30,9 @@ An `igraph` directed graph with vertices and edges as supplied
 get_keys <- function() wbs_table$id
 get_parent_key_by_child_key <- function(key) wbs_table[which(wbs_table$id == key), "pid"]
 create_rollup_tree(get_keys, get_parent_key_by_child_key)
-#> IGRAPH fc1834e DN-- 10 9 -- 
+#> IGRAPH 220122e DN-- 10 9 -- 
 #> + attr: name (v/c)
-#> + edges from fc1834e (vertex names):
+#> + edges from 220122e (vertex names):
 #> [1] 1  ->top 2  ->top 3  ->top 1.1->1   1.2->1   2.1->2   2.2->2   3.1->3  
 #> [9] 3.2->3  
 ```

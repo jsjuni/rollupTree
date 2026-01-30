@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/jsjuni/rollupTree/blob/v0.4.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/jsjuni/rollupTree/blob/main/DESCRIPTION)
 
 Jenkins JS (2026). *rollupTree: Perform Recursive Computations*. R
 package version 0.4.0, <https://jsjuni.github.io/rollupTree/>.
