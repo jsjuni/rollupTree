@@ -9,7 +9,7 @@ df_set_by_id(df, idval, prop, val)
 \arguments{
 \item{df}{a data frame}
 
-\item{idval}{id value for the specified row}
+\item{idval}{id of the specified row}
 
 \item{prop}{column name of the property value to get}
 

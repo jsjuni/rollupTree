@@ -57,7 +57,7 @@ update_prop <- function(ds, target, sources, set, get,
 #'
 #' @examples
 #' df_get_keys(wbs_table, "id")
-df_get_keys <- function(df, key) df[, key]
+df_get_keys <- function(df, key) { df[, key] }
 
 #' Get ids from a data frame
 #'
@@ -72,17 +72,40 @@ df_get_keys <- function(df, key) df[, key]
 #'
 #' @examples
 #' df_get_ids(wbs_table)
-df_get_ids <- function(df) df_get_keys(df, "id")
+df_get_ids <- function(df) { df_get_keys(df, "id") }
 
-#' Get property by key from data frame
+#' Get row by key from data frame
+#'
+#' @param df a data frame
+#' @param key name of the column used as key
+#' @param keyval value of the key for the specified row
+#'
+#' @returns  A named list of values from the requested row
+#' @export
+#'
+#' @examples
+#' df_get_row_by_key(wbs_table, "id", "1.1")
+df_get_row_by_key <- function(df, key, keyval) { as.list(df[df[, key] == keyval, ]) }
+
+#' Title
+#'
+#' @param df a data frame
+#' @param idval id of the row to get
+#'
+#' @returns A named list of values from the requested row
+#' @export
+#'
+#' @examples
+#' df_get_row_by_id(wbs_table, "1.1")
+df_get_row_by_id <- function(df, idval) { as.list(df[df[, "id"] == idval, ]) }
+
+#' Get row by key "id" from data frame
 #'
 #' @description
 #' `df_get_by_key` returns the value of specified property (column) in a specified row
 #' of a data frame. The row is specified by a key column and a value from that column.
 #'
-#' @param df a data frame
-#' @param key name of the column used as key
-#' @param keyval value of the key for the specified row
+#' @inheritParams df_get_row_by_key
 #' @param prop column name of the property value to get
 #'
 #' @return The requested value
@@ -90,7 +113,7 @@ df_get_ids <- function(df) df_get_keys(df, "id")
 #'
 #' @examples
 #' df_get_by_key(wbs_table, "id", "1.1", "work")
-df_get_by_key <- function(df, key, keyval, prop) df[df[, key] == keyval, prop]
+df_get_by_key <- function(df, key, keyval, prop) { df[df[, key] == keyval, prop] }
 
 #' Get property by key "id" from data frame
 #'
@@ -98,8 +121,7 @@ df_get_by_key <- function(df, key, keyval, prop) df[df[, key] == keyval, prop]
 #' `df_get_by_id` returns the value of specified property (column) in a specified row
 #' of a data frame. The row is specified by a value for the `id` column.
 #'
-#' @param df a data frame
-#' @param idval id of the row to get
+#' @inheritParams df_get_row_by_id
 #' @param prop name of the column to get
 #'
 #' @return The requested value
@@ -107,13 +129,46 @@ df_get_by_key <- function(df, key, keyval, prop) df[df[, key] == keyval, prop]
 #'
 #' @examples
 #' df_get_by_id(wbs_table, "1.1", "work")
-df_get_by_id <- function(df, idval, prop) df[df[, "id"] == idval, prop]
+df_get_by_id <- function(df, idval, prop) { df[df[, "id"] == idval, prop] }
 
-#' Set property by key in data frame
+#' Set row by key in data frame
 #'
 #' @param df a data frame
 #' @param key name of the column used as key
 #' @param keyval value of the key for the specified row
+#' @param list named list of values to set
+#'
+#' @returns The updated data frame
+#' @export
+#'
+#' @examples
+#' l <- list(id = "1.1", pid = "1", name = "Thermal", work = 11.9, budget = 25001)
+#' df_set_row_by_key(wbs_table, "id", "1.1", l)
+df_set_row_by_key <- function(df, key, keyval, list) {
+  df[df[, key] == keyval, ] <- as.data.frame(list)
+  df
+}
+
+#' Set row by key "id"  in data frame
+#'
+#' @param df a data frame
+#' @param idval id of the specified row
+#' @param list named list of values to set
+#'
+#' @returns The updated data frame
+#' @export
+#'
+#' @examples
+#' l <- list(id = "1.1", pid = "1", name = "Thermal", work = 11.9, budget = 25001)
+#' df_set_row_by_id(wbs_table, "1.1", l)
+df_set_row_by_id <- function(df, idval, list) {
+  df[df[, "id"] == idval, ] <- as.data.frame(list)
+  df
+}
+
+#' Set property by key in data frame
+#'
+#' @inheritParams df_set_row_by_key
 #' @param prop column name of the property value to get
 #' @param val value to set
 #'
@@ -129,8 +184,7 @@ df_set_by_key <- function(df, key, keyval, prop, val) {
 
 #' Set property by key "id" in data frame
 #'
-#' @param df a data frame
-#' @param idval id value for the specified row
+#' @inheritParams df_set_row_by_id
 #' @param prop column name of the property value to get
 #' @param val value to set
 #'
