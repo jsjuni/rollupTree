@@ -1,5 +1,8 @@
 # rollupTree (development version)
 
+* fixed missing column names in df_set_row_by{key,id} (#30)
+* fixed missing title in roxygen for df_get_row_by_id() (#28)
+
 # rollupTree 0.4.0
 
 * `df_get_row_by_key()`, `df_get_row_by_id()`, `df_set_row_by_key()`, `df_set_row_by_id()` added (#25).
