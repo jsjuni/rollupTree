@@ -57,14 +57,16 @@ test_that("df_get_by_id() works", {
 
 test_that("df_set_row_by_key() works", {
   expected <- list(id = "1.1", pid = "2", name = "Thermal", work = 11.9, budget = 25001)
-  new_df <- df_set_row_by_key(wbs_table, "id", "1.1", expected)
+  shuffled <- expected[c("pid", "name", "id", "budget", "work")]
+  new_df <- df_set_row_by_key(wbs_table, "id", "1.1", shuffled)
   expect_equal( new_df[new_df[, "id"] != "1.1", ], wbs_table[wbs_table[, "id"] != "1.1", ])
   expect_equal(df_get_row_by_key(new_df, "id", "1.1"), expected)
 })
 
 test_that("df_set_row_by_id() works", {
   expected <- list(id = "1.1", pid = "2", name = "Thermal", work = 11.9, budget = 25001)
-  new_df <- df_set_row_by_id(wbs_table, "1.1", expected)
+  shuffled <- expected[c("pid", "name", "id", "budget", "work")]
+  new_df <- df_set_row_by_id(wbs_table, "1.1", shuffled)
   expect_equal( new_df[new_df[, "id"] != "1.1", ], wbs_table[wbs_table[, "id"] != "1.1", ])
   expect_equal(df_get_row_by_id(new_df, "1.1"), expected)
 })
