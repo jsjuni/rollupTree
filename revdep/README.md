@@ -10,7 +10,7 @@
 |collate  |en_US.UTF-8                               |
 |ctype    |en_US.UTF-8                               |
 |tz       |America/New_York                          |
-|date     |2026-01-29                                |
+|date     |2026-01-31                                |
 |rstudio  |2026.01.0+392 Apple Blossom (desktop)     |
 |pandoc   |3.7.0.2 @ /usr/local/bin/ (via rmarkdown) |
 
@@ -18,7 +18,7 @@
 
 |package    |old   |new        |Δ  |
 |:----------|:-----|:----------|:--|
-|rollupTree |0.3.2 |0.3.2.9000 |*  |
+|rollupTree |0.4.0 |0.4.0.9000 |*  |
 |cli        |NA    |3.6.5      |*  |
 |cpp11      |NA    |0.5.3      |*  |
 |igraph     |NA    |2.2.1      |*  |
