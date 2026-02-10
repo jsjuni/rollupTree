@@ -32,7 +32,7 @@ by applying helper functions to construct vertices and edges."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create a tree for use with <code>rollup()</code></h1>
-      <small class="dont-index">Source: <a href="https://github.com/jsjuni/rollupTree/blob/v0.4.1/R/rollup.R" class="external-link"><code>R/rollup.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jsjuni/rollupTree/blob/main/R/rollup.R" class="external-link"><code>R/rollup.R</code></a></small>
       <div class="d-none name"><code>create_rollup_tree.Rd</code></div>
     </div>
 
@@ -68,9 +68,9 @@ by applying helper functions to construct vertices and edges.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">get_keys</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="va">wbs_table</span><span class="op">$</span><span class="va">id</span></span></span>
 <span class="r-in"><span><span class="va">get_parent_key_by_child_key</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">key</span><span class="op">)</span> <span class="va">wbs_table</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">wbs_table</span><span class="op">$</span><span class="va">id</span> <span class="op">==</span> <span class="va">key</span><span class="op">)</span>, <span class="st">"pid"</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu">create_rollup_tree</span><span class="op">(</span><span class="va">get_keys</span>, <span class="va">get_parent_key_by_child_key</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> IGRAPH 137d45a DN-- 10 9 -- </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> IGRAPH 8c035ef DN-- 10 9 -- </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> + attr: name (v/c)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> + edges from 137d45a (vertex names):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> + edges from 8c035ef (vertex names):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1  -&gt;top 2  -&gt;top 3  -&gt;top 1.1-&gt;1   1.2-&gt;1   2.1-&gt;2   2.2-&gt;2   3.1-&gt;3  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [9] 3.2-&gt;3  </span>
 <span class="r-in"><span></span></span>

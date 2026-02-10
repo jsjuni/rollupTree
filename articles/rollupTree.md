@@ -98,7 +98,7 @@ uses internally:
 
 ``` r
 igraph::topo_sort(wbs_tree)
-#> + 10/10 vertices, named, from dacf65e:
+#> + 10/10 vertices, named, from a5b0788:
 #>  [1] 1.1 1.2 2.1 2.2 3.1 3.2 1   2   3   top
 ```
 
