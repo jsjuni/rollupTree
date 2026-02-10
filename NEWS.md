@@ -1,4 +1,4 @@
-# rollupTree (development version)
+# rollupTree 0.4.1
 
 * fixed missing column names in df_set_row_by{key,id} (#30)
 
