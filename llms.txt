@@ -115,7 +115,7 @@ rollup(
   : Get keys from a data frame
 
 - [`df_get_row_by_id()`](https://jsjuni.github.io/rollupTree/reference/df_get_row_by_id.md)
-  : Title
+  : Get row by key from data frame
 
 - [`df_get_row_by_key()`](https://jsjuni.github.io/rollupTree/reference/df_get_row_by_key.md)
   : Get row by key from data frame

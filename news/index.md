@@ -1,5 +1,13 @@
 # Changelog
 
+## rollupTree 0.4.1
+
+- fixed missing column names in df_set_row_by{key,id}
+  ([\#30](https://github.com/jsjuni/rollupTree/issues/30))
+
+- fixed missing title in roxygen for df_get_row_by_id()
+  ([\#28](https://github.com/jsjuni/rollupTree/issues/28))
+
 ## rollupTree 0.4.0
 
 CRAN release: 2026-01-30
